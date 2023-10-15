@@ -3,6 +3,17 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Signup from '@/views/Signup'
+import { authService } from '@/firebase/config'
+
+const redirectIfAlreadyAuth = (to, from, next) => {
+  let currentUser = authService.currentUser
+  console.log('User', currentUser)
+  if (currentUser) {
+    next({ name: 'home' })
+  } else {
+    next()
+  }
+}
 
 const routes = [
   {
@@ -13,12 +24,14 @@ const routes = [
   {
     path: '/signup',
     name: 'signup',
-    component: Signup
+    component: Signup,
+    beforeEnter: redirectIfAlreadyAuth
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login, 
+    beforeEnter: redirectIfAlreadyAuth
   },
 ]
 
