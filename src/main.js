@@ -8,7 +8,7 @@ import '@/assets/main.css'
 let app
 
 authService.onAuthStateChanged(() => {
-	if (!app) {
-		app = createApp(App).use(router).mount('#app')
-	}
+  if (!app) {
+    app = createApp(App).use(router).mount('#app')
+  }
 })
