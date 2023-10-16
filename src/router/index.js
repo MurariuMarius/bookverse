@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '@/views/Home'
 import Login from '@/views/Login'
+import Profile from '@/views/Profile'
 import Signup from '@/views/Signup'
+
 import { authService } from '@/firebase/config'
 
 const redirectIfAlreadyAuth = (to, from, next) => {
@@ -32,6 +34,11 @@ const routes = [
     name: 'login',
     component: Login, 
     beforeEnter: redirectIfAlreadyAuth
+  },
+  {
+    path: '/profile/:id',
+    name: 'profile',
+    component: Profile,
   },
 ]
 

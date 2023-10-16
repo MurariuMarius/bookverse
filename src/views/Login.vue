@@ -4,10 +4,10 @@
     <form @submit.prevent="handleSubmit">
       <input type="email" required placeholder="Email" v-model="email">
       <input type="password" required placeholder="Password" v-model="password">
-      <button>Sign up</button>
+      <button>Log in</button>
     </form>
     <div>
-      Not yet registered? <span>Sign up</span>
+      Not yet registered? <span @click="redirectSignup">Sign up</span>
     </div>
     <div class="error">{{ error }}</div>
   </div>
@@ -27,6 +27,10 @@ export default {
     const router = useRouter()
     const { error, login } = useLogin()
 
+    const redirectSignup = () => {
+      router.push({ name: 'signup'})
+    }
+
     const handleSubmit = async () => {
       await login(email.value, password.value)
       if (!error.value) {
@@ -34,7 +38,7 @@ export default {
       }
     }
 
-    return { email, error, password, handleSubmit }
+    return { email, error, password, handleSubmit, redirectSignup }
   }
 }
 </script>

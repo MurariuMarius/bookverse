@@ -13,6 +13,11 @@ button {
   margin: 20px auto;
   border-radius: 25px;
   padding: 10px 25px;
+  background-color: #edebeb;
+}
+
+button:hover {
+  background-color: #bfbfbf;
 }
 
 .error {

@@ -9,7 +9,7 @@
       <button>Sign up</button>
     </form>
     <div>
-      Already have an account? <span>Log in</span>
+      Already have an account? <span @click="redirectLogin">Log in</span>
     </div>
     <div class="error">{{ error }}</div>
   </div>
@@ -43,6 +43,10 @@ export default {
       return true;
     }
 
+    const redirectLogin = () => {
+      router.push({ name: 'login' })
+    }
+
     const handleSubmit = async () => {
       if (verifyMatchingPasswords()) {
         const res = await signup(email.value, password.value, username.value)
@@ -59,7 +63,7 @@ export default {
       }
     }
 
-    return { email, error, password, passwordAgain, username, handleSubmit }
+    return { email, error, password, passwordAgain, username, handleSubmit, redirectLogin }
   }
 }
 </script>
