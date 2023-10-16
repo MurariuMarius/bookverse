@@ -17,8 +17,11 @@
 
 <script>
 import { ref } from 'vue'
-import { useSignup } from '@/composables/useSignup'
 import { useRouter } from 'vue-router'
+
+import useSignup from '@/composables/useSignup'
+import { Timestamp } from '@/firebase/config'
+import { firestoreService } from '@/firebase/config'
 
 export default {
   setup() {
@@ -42,7 +45,14 @@ export default {
 
     const handleSubmit = async () => {
       if (verifyMatchingPasswords()) {
-        await signup(email.value, password.value)
+        const res = await signup(email.value, password.value)
+        firestoreService.collection('users')
+          .doc(res.user.uid)
+          .set({
+            username: username.value,
+            email: email.value,
+            createdAt: Timestamp.now()
+        })
         if (!error.value) {
           router.push({ name: 'home' })
         }
