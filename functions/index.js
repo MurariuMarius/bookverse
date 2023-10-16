@@ -1,19 +1,24 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
+const {logger} = require("firebase-functions/v2");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+exports.createOffer = onCall((request) => {
+  const getBookDetails = async () => {
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${request.data.ISBN.trim()}+isbn`);
+    const books = await response.json();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+    if (books.totalItems != 0) {
+      const book = books.items[0].volumeInfo;
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+      const authors = book.authors;
+      const title = book.title;
+
+      // TODO: add book details to firestore, handle ISBN not found case
+  
+      return { authors, title };
+    } else {
+      throw new HttpsError("ISBN not found");
+    }
+  }
+
+   return getBookDetails();
+});
