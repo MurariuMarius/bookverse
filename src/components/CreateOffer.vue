@@ -2,12 +2,18 @@
   <div>
     <h2>Create a book offer</h2>
     <div>
-      <input type="text" placeholder="ISBN" v-model="ISBN">
+      <div class="form">
+        <input type="text" required placeholder="Title" v-model="title">
+        <input type="text" required placeholder="Authors" v-model="authors">
+        <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
+        <pre class="error">{{ ISBN_error }}</pre>
+      </div>
       <div class="options">
-        <button v-for="option in options" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
+        <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
       </div>
       <button @click="handleSubmit" type="submit">Create</button>
     </div>
+      <BookConditionsDescription />
   </div>
 </template>
 
@@ -15,14 +21,36 @@
 import { ref } from 'vue'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
+import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
+
 export default {
+  components: { BookConditionsDescription },
   setup() {
 
-    const options = ref(['A', 'B', 'C'])
+    const bookConditions = ref(['New', 'As New', 'Good', 'Fair', 'Poor'])
     const selectedOption = ref('')
-    const ISBN = ref('');
+    const authors = ref('')
+    const title = ref('')
+    const ISBN = ref('')
+    const ISBN_error = ref('')
 
     const functions = getFunctions()
+
+    const checkISBN = async () => {
+      ISBN.value = ISBN.value.trim()
+
+      if (ISBN.value.length != 13) {
+        return
+      }
+      
+      console.log('checking isbn');
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${ISBN.value}+isbn`)
+      const books = await response.json()
+
+      if (books.totalItems == 0) {
+        ISBN_error.value = 'ISBN may be invalid. Please check again.\nDisregard warning if book is newly published or rare.'
+      }
+    }
 
     const selectOption = e => {
       selectedOption.value = e.target.innerHTML
@@ -30,9 +58,9 @@ export default {
 
     const handleSubmit = () => {
       const createOffer = httpsCallable(functions, 'createOffer')
-      createOffer({ ISBN: ISBN.value, option: selectedOption.value })
+      createOffer({ ISBN: ISBN.value, condition: selectedOption.value })
         .then(result => {
-          console.log(result.data)
+          console.log(result)
         })
         .catch(err => {
           console.log(err.message)
@@ -41,20 +69,32 @@ export default {
         // TODO: Request further book details if ISBN not found
     };
 
-    return { ISBN, options, selectedOption, handleSubmit, selectOption };
+    return { authors, title, ISBN, ISBN_error, bookConditions, selectedOption, checkISBN, handleSubmit, selectOption };
   },
 }
 </script>
 
-<style scoped>
+<style>
+.form pre {
+  margin: 0;
+  font-weight: 300;
+}
+
+.form {
+  max-width: 600px;
+  width: 100%;
+}
+
 .options {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 .options button {
- margin: 10px;
+  margin: 20px 5px;
+  width: 90px;
+  padding: 5px 0px;
 }
 .highlight {
   margin-top: 100px;
