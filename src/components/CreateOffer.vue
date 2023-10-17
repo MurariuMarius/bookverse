@@ -2,7 +2,7 @@
   <div>
     <h2>Create a book offer</h2>
     <div>
-      <div class="form">
+      <div class="form" @submit.prevent="handleSubmit">
         <input type="text" required placeholder="Title" v-model="title">
         <input type="text" required placeholder="Authors" v-model="authors">
         <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
@@ -38,12 +38,14 @@ export default {
 
     const checkISBN = async () => {
       ISBN.value = ISBN.value.trim()
+      ISBN_error.value = ''
 
-      if (ISBN.value.length != 13) {
+      if (!/^[0-9]{13}$/.test(ISBN.value)) {
+        console.log('invalid isbn');
+        ISBN_error.value = 'Invalid ISBN'
         return
       }
       
-      console.log('checking isbn');
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${ISBN.value}+isbn`)
       const books = await response.json()
 
@@ -53,20 +55,20 @@ export default {
     }
 
     const selectOption = e => {
+      console.log('here');
       selectedOption.value = e.target.innerHTML
     }
 
     const handleSubmit = () => {
       const createOffer = httpsCallable(functions, 'createOffer')
-      createOffer({ ISBN: ISBN.value, condition: selectedOption.value })
+      console.log(selectedOption.value)
+      createOffer({ title: title.value, authors: authors.value, ISBN: ISBN.value, condition: selectedOption.value })
         .then(result => {
           console.log(result)
         })
         .catch(err => {
           console.log(err.message)
         })
-
-        // TODO: Request further book details if ISBN not found
     };
 
     return { authors, title, ISBN, ISBN_error, bookConditions, selectedOption, checkISBN, handleSubmit, selectOption };
