@@ -2,8 +2,8 @@ const {onCall, HttpsError} = require("firebase-functions/v2/https");
 const {logger} = require("firebase-functions/v2");
 
 exports.createOffer = onCall((request) => {
-  const getBookDetails = async () => {
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${request.data.ISBN.trim()}+isbn`);
+  const getBookDetails = async (ISBN) => {
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${ISBN}+isbn`);
     const books = await response.json();
 
     if (books.totalItems != 0) {
@@ -16,9 +16,14 @@ exports.createOffer = onCall((request) => {
   
       return { authors, title };
     } else {
-      throw new HttpsError("ISBN not found");
+      throw new HttpsError('ISBN not found');
     }
   }
 
-   return getBookDetails();
+  if (Object.keys(request.data).length === 2) {
+    return getBookDetails(request.data.ISBN.trim());
+  } else {
+    return 'Enter author, ISBN and title manually';
+  }
+
 });
