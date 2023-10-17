@@ -68,4 +68,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+div {
+  width: 400px;
+}
+</style>

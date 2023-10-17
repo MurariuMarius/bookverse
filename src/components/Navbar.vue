@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <nav>
     <div class="search">
       
     </div>
@@ -12,7 +12,7 @@
         <button @click="handleLogin">Log in</button>
       </div>
     </div>
-  </div>
+  </nav>
 
 </template>
 
@@ -64,7 +64,7 @@ button {
   color: #f6f3f3;
   cursor: pointer;
 }
-.navbar {
+nav {
   width: 100%;
   border-radius: 15px;
   background-image: linear-gradient(to bottom right, #69c606, #01bf14);
