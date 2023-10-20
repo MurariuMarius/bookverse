@@ -6,7 +6,9 @@
         <input type="text" required placeholder="Title" v-model="title">
         <input type="text" required placeholder="Authors" v-model="authors">
         <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
+        <input type="text" required placeholder="Price in EUR" v-model="price" @blur="checkPrice">
         <pre class="error">{{ ISBN_error }}</pre>
+        <pre class="error">{{ priceError }}</pre>
       </div>
       <div class="options">
         <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
@@ -33,6 +35,8 @@ export default {
     const title = ref('')
     const ISBN = ref('')
     const ISBN_error = ref('')
+    const price = ref('')
+    const priceError = ref('')
 
     const functions = getFunctions()
 
@@ -46,7 +50,7 @@ export default {
         return
       }
       
-      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${ISBN.value}+isbn`)
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN.value}`)
       const books = await response.json()
 
       if (books.totalItems == 0) {
@@ -55,14 +59,20 @@ export default {
     }
 
     const selectOption = e => {
-      console.log('here');
       selectedOption.value = e.target.innerHTML
+    }
+
+    const checkPrice = () => {
+      priceError.value = ''
+      if (!/^(([1-9][0-9]{0,8})|0)([.,][0-9]{1,2})?$/.test(price.value.trim())) {
+        priceError.value = 'Invalid price'
+      }
     }
 
     const handleSubmit = () => {
       const createOffer = httpsCallable(functions, 'createOffer')
       console.log(selectedOption.value)
-      createOffer({ title: title.value, authors: authors.value, ISBN: ISBN.value, condition: selectedOption.value })
+      createOffer({ title: title.value, authors: authors.value, ISBN: ISBN.value, condition: selectedOption.value, price: price.value })
         .then(result => {
           console.log(result)
         })
@@ -71,7 +81,7 @@ export default {
         })
     };
 
-    return { authors, title, ISBN, ISBN_error, bookConditions, selectedOption, checkISBN, handleSubmit, selectOption };
+    return { authors, title, ISBN, ISBN_error, price, priceError, bookConditions, selectedOption, checkISBN, checkPrice, handleSubmit, selectOption };
   },
 }
 </script>
