@@ -7,7 +7,7 @@
       <div class="price">
         <p>From</p>
         <h2>Price</h2>
-        <h3>€</h3>
+        <h2>€</h2>
       </div>
     </div>
   </article>
@@ -69,11 +69,10 @@ img {
   padding: 20px 35px;
   border-radius: 20px;
   justify-content: center;
-  margin: auto;
+  margin: 20px;
   display: flex;
   flex-direction: column;
-  width: 20%;
-  max-width: 400px;
+  width: 275px;
 }
 
 .price {
@@ -84,11 +83,8 @@ img {
 }
 
 .price h2 {
-  margin: 0px 10px;
-}
-
-.price h3, .price p {
-  margin: 0;
+  color: #01bf14;
+  margin-left: 10px
 }
 
 .title {

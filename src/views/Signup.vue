@@ -72,4 +72,10 @@ export default {
 div {
   width: 400px;
 }
+
+span {
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
 </style>
