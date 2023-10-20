@@ -1,7 +1,6 @@
 <template>
   <article class="book">
-    <!-- <img src="@/assets/book-icon.svg" alt="book icon" class="book-icon"> -->
-    <img src="http://books.google.com/books/content?id=4EBHUjNLuyIC&printsec=frontcover&img=1&zoom=1&source=gbs_api" alt="book icon" class="book-icon">
+    <img :src=imageSource alt="book icon" class="book-icon">
     <div>
       <h2 class="title">Murder in the Orient Express</h2>
       <h3 class="author">Agatha Christie</h3>
@@ -15,13 +14,53 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 
+export default {
+  props: { ISBN: String },
+  setup(props) {
+
+    const imageSource = ref('')
+    
+    const getBookIcon = async (ISBN) => {
+      const bookFound = () => {
+        console.log(books)
+        return books.totalItems != 0 && (
+          books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
+          books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN
+        )
+      }
+
+      console.log(ISBN)
+      
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN}`)
+      const books = await response.json()
+      
+
+      if (bookFound()) {
+        console.log(books.items[0].volumeInfo.imageLinks.thumbnail)
+        try {
+          imageSource.value = books.items[0].volumeInfo.imageLinks.thumbnail
+          return
+        } catch (err) {
+          console.log(err.message);
+        }
+      } 
+      
+      imageSource.value = require('@/assets/book-icon.svg')
+    }
+    
+    getBookIcon(props.ISBN)
+  
+    return { imageSource }
+  }
+}
 </script>
 
 <style scoped>
 img {
   margin: auto;
-  width: 70%;
+  height: 300px;
   max-width: 90%;
 }
 
