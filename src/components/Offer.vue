@@ -22,7 +22,7 @@ export default {
   align-items: center;
   display: flex;
   flex-flow: row;
-  width: 90%;
+  width: 100%;
   background-color: #e8e5e5;
   border-radius: 25px;
   justify-content: space-around;
