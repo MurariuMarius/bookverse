@@ -7,20 +7,23 @@
     </div>
     <div class="price">
       <p>From</p>
-      <h2>Price</h2>
+      <h2>{{ price }}</h2>
       <h2>€</h2>
     </div>
   </article>
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export default {
   props: { book: Object, offers: Array[Object] },
   setup(props) {
 
     const imageSource = ref('')
+    const price = computed(() => {
+      return Math.min(...props.offers.map(o => o.price))
+    })
     
     const getBookIcon = async (ISBN) => {
       const bookFound = () => {
@@ -49,7 +52,7 @@ export default {
 
     getBookIcon(props.book.ISBN)
   
-    return { imageSource }
+    return { imageSource, price }
   }
 }
 </script>
