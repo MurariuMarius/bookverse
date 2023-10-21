@@ -1,5 +1,5 @@
 <template>
-  <article class="book">
+  <article class="book" @click="viewBook">
     <img :src=imageSource alt="book icon" class="book-icon">
     <div>
       <h2 class="title">{{ book.title }}</h2>
@@ -14,45 +14,27 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+
+import useGetBookIcon from '@/composables/useGetBookIcon'
 
 export default {
   props: { book: Object, offers: Array[Object] },
   setup(props) {
 
-    const imageSource = ref('')
     const price = computed(() => {
       return Math.min(...props.offers.map(o => o.price))
     })
     
-    const getBookIcon = async (ISBN) => {
-      const bookFound = () => {
-        return books.totalItems != 0 && (
-          books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
-          books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN
-        )
-      }
-      
-      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN}`)
-      const books = await response.json()
-      
-
-      if (bookFound()) {
-        // console.log(books.items[0].volumeInfo.imageLinks.thumbnail)
-        try {
-          imageSource.value = books.items[0].volumeInfo.imageLinks.thumbnail
-          return
-        } catch (err) {
-          console.log(err.message);
-        }
-      } 
-      
-      imageSource.value = require('@/assets/book-icon.svg')
-    }
+    const { imageSource, getBookIcon } = useGetBookIcon()
 
     getBookIcon(props.book.ISBN)
-  
-    return { imageSource, price }
+    
+    const viewBook = () => {
+      console.log(props.book.title)
+    }
+
+    return { imageSource, price, viewBook }
   }
 }
 </script>
@@ -73,6 +55,10 @@ img {
   display: flex;
   flex-direction: column;
   width: 275px;
+}
+
+.book:hover {
+  cursor: pointer;
 }
 
 .price {

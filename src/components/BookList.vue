@@ -1,4 +1,10 @@
 <template>
+  
+  <!-- test -->
+  <div v-if="testBook && testOffers">
+    <!-- <Book :book="testBook" :offers="testOffers" imageSource="http://books.google.com/books/content?id=4EBHUjNLuyIC&printsec=frontcover&img=1&zoom=1&source=gbs_api"/> -->
+  </div>
+
  <section class="book-list" v-if="books.size != 0">
   <BookListItem v-for="[book, offers] in books" :key="book.ISBN" :book="book" :offers="offers" />
  </section>
@@ -17,12 +23,19 @@ export default {
     
     const books = ref(new Map())
 
+    const testBook = ref(null)
+    const testOffers = ref(null)
+
     onMounted(async () => {
       books.value = await getBooksWithOffers()
       console.log(books.value)
+
+      const el = books.value.keys().next()
+      testBook.value = el.value
+      testOffers.value = books.value.get(testBook.value)
     })
 
-    return { books }
+    return { books, testBook, testOffers }
   }
 }
 </script>
