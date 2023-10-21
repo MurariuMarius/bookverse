@@ -30,6 +30,7 @@ export default {
 
 .card:hover {
   background-color: #dcdcdc;
+  cursor: pointer;
 }
 
 .price {
@@ -55,6 +56,10 @@ p {
   text-transform: uppercase;
   font-size: larger;
   font-weight: 500;
+}
+
+.seller {
+  border-bottom: 1.3px solid;
 }
 
 </style>

@@ -17,6 +17,7 @@
 import { computed } from 'vue';
 
 import useGetBookIcon from '@/composables/useGetBookIcon'
+import { useRouter } from 'vue-router';
 
 export default {
   props: { book: Object, offers: Array[Object] },
@@ -26,12 +27,13 @@ export default {
       return Math.min(...props.offers.map(o => o.price))
     })
     
+    const router = useRouter()
     const { imageSource, getBookIcon } = useGetBookIcon()
 
     getBookIcon(props.book.ISBN)
     
     const viewBook = () => {
-      console.log(props.book.title)
+      router.push({ name: 'book', params: { ISBN: props.book.ISBN }})
     }
 
     return { imageSource, price, viewBook }
