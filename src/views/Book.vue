@@ -4,7 +4,7 @@
       <div class="bookDetails">
         <img :src="imageSource" :alt="book.title" @load="imageLoad">
         <h2>{{ book.title }}</h2>
-        <h2>{{ book.authors }}</h2>
+        <h2>{{ authors }}</h2>
         <h3>{{ book.ISBN }}</h3>
       </div>
       <div class="offers">
@@ -39,6 +39,10 @@ export default {
     const offers = ref(null)
     const pageLoaded = ref(false)
 
+    const authors = computed(() => {
+      return book.value.authors.join(', ')
+    })
+
     const offersSortedByPrice = computed(() => {
       if (offers.value) {
         return offers.value.sort((a, b) => a.price - b.price)
@@ -59,7 +63,7 @@ export default {
       pageLoaded.value = true
     }
 
-    return { book, offersSortedByPrice, imageSource, imageLoad, pageLoaded }
+    return { authors, book, offersSortedByPrice, imageSource, imageLoad, pageLoaded }
   }
 }
 </script>

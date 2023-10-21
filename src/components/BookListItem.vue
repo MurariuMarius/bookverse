@@ -3,7 +3,7 @@
     <img :src=imageSource alt="book icon" class="book-icon" @load="imageLoad">
     <div>
       <h2 class="title">{{ book.title }}</h2>
-      <h3 class="author">{{ book.authors }}</h3>
+      <h3 class="author">{{ authors }}</h3>
     </div>
     <div class="price">
       <p>From</p>
@@ -24,6 +24,9 @@ export default {
   props: { book: Object, offers: Array[Object] },
   setup(props, { emit }) {
 
+    const authors = computed(() => {
+      return props.book.authors.join(', ')
+    })
 
     const price = computed(() => {
       return Math.min(...props.offers.map(o => o.price))
@@ -42,7 +45,7 @@ export default {
       emit('componentLoaded')
     }
 
-    return { imageSource, imageLoad, price, viewBook }
+    return { authors, imageSource, imageLoad, price, viewBook }
   }
 }
 </script>
