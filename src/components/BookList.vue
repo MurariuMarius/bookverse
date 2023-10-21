@@ -1,41 +1,38 @@
 <template>
-  
-  <!-- test -->
-  <div v-if="testBook && testOffers">
-    <!-- <Book :book="testBook" :offers="testOffers" imageSource="http://books.google.com/books/content?id=4EBHUjNLuyIC&printsec=frontcover&img=1&zoom=1&source=gbs_api"/> -->
-  </div>
-
  <section class="book-list" v-if="books.size != 0">
-  <BookListItem v-for="[book, offers] in books" :key="book.ISBN" :book="book" :offers="offers" />
+  <BookListItem v-for="[book, offers] in books" :key="book.ISBN" :book="book" :offers="offers" @componentLoaded="componentLoaded" />
  </section>
+ <div v-if="!pageLoaded">
+  <Spinner />
+ </div>
 </template>
 
 <script>
 import BookListItem from '@/components/BookListItem.vue'
+import Spinner from '@/components/Spinner.vue'
 import { onMounted, ref } from 'vue'
 import useGetBooksWithOffers from '@/composables/useGetBooksWithOffers'
 
 export default {
-  components: { BookListItem },
+  components: { BookListItem, Spinner },
   setup() {
     
     const { error, getBooksWithOffers } = useGetBooksWithOffers()
     
     const books = ref(new Map())
 
-    const testBook = ref(null)
-    const testOffers = ref(null)
+    const pageLoaded = ref(false)
 
     onMounted(async () => {
       books.value = await getBooksWithOffers()
       console.log(books.value)
-
-      const el = books.value.keys().next()
-      testBook.value = el.value
-      testOffers.value = books.value.get(testBook.value)
     })
 
-    return { books, testBook, testOffers }
+    const componentLoaded = () => {
+      pageLoaded.value = true
+    }
+
+    return { books, componentLoaded, pageLoaded }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <article class="book" @click="viewBook">
-    <img :src=imageSource alt="book icon" class="book-icon">
+    <img :src=imageSource alt="book icon" class="book-icon" @load="imageLoad">
     <div>
       <h2 class="title">{{ book.title }}</h2>
       <h3 class="author">{{ book.authors }}</h3>
@@ -20,8 +20,10 @@ import useGetBookIcon from '@/composables/useGetBookIcon'
 import { useRouter } from 'vue-router';
 
 export default {
+  emits: ['componentLoaded'],
   props: { book: Object, offers: Array[Object] },
-  setup(props) {
+  setup(props, { emit }) {
+
 
     const price = computed(() => {
       return Math.min(...props.offers.map(o => o.price))
@@ -36,7 +38,11 @@ export default {
       router.push({ name: 'book', params: { ISBN: props.book.ISBN }})
     }
 
-    return { imageSource, price, viewBook }
+    const imageLoad = () => {
+      emit('componentLoaded')
+    }
+
+    return { imageSource, imageLoad, price, viewBook }
   }
 }
 </script>

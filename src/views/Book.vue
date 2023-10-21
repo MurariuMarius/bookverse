@@ -2,7 +2,7 @@
   <div class="book" v-if="book">
     <div class="headSection">
       <div class="bookDetails">
-        <img :src="imageSource" :alt="book.title">
+        <img :src="imageSource" :alt="book.title" @load="imageLoad">
         <h2>{{ book.title }}</h2>
         <h2>{{ book.authors }}</h2>
         <h3>{{ book.ISBN }}</h3>
@@ -14,24 +14,30 @@
       </div>
     </div>
   </div>
+  <div v-if="!pageLoaded">
+    <Spinner />
+  </div>
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue';
-import BookConditionsDescription from '@/components/BookConditionsDescription.vue';
-import Offer from '@/components/Offer.vue';
+import { computed, onMounted, ref } from 'vue'
+
+import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
+import Offer from '@/components/Offer.vue'
+import Spinner from '@/components/Spinner.vue'
 
 import useGetOffersForBook from '@/composables/useGetOffersForBook'
 import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
 export default {
-  components: { BookConditionsDescription, Offer, BookConditionsDescription },
+  components: { BookConditionsDescription, Offer, Spinner },
   props: { ISBN: String },
   setup(props) {
 
     const book = ref(false)
     const offers = ref(null)
+    const pageLoaded = ref(false)
 
     const offersSortedByPrice = computed(() => {
       if (offers.value) {
@@ -44,12 +50,16 @@ export default {
     const { imageSource, getBookIcon } = useGetBookIcon()
 
     onMounted(async () => {
-      book.value = await getDocByID('books', props.ISBN)
-      offers.value = await getOffersForBook(props.ISBN)
-      await getBookIcon(props.ISBN)
+      [book.value, offers.value, ] = await Promise.all(
+        [getDocByID('books', props.ISBN), getOffersForBook(props.ISBN, getBookIcon(props.ISBN))]
+      )
     })
 
-    return { book, offersSortedByPrice, imageSource }
+    const imageLoad = () => {
+      pageLoaded.value = true
+    }
+
+    return { book, offersSortedByPrice, imageSource, imageLoad, pageLoaded }
   }
 }
 </script>
