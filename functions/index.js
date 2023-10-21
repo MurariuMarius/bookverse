@@ -13,7 +13,9 @@ const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 exports.createOffer = onCall(async (request) => {
   const getBookDetails = async (ISBN) => {
     const bookFound = () => {
-      return books.totalItems != 0 && books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN
+      return books.totalItems != 0 && (
+        books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
+        books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN )
     }
 
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN}`)
@@ -63,6 +65,14 @@ exports.createOffer = onCall(async (request) => {
   const storeOffer = async (bookOffer) => {
     await firestoreService.collection('offers').add(bookOffer)
   }
+
+  const getUserID = () => {
+    try {
+      return request.auth.uid
+    } catch (err) {
+      throw new HttpsError('unauthenticated', err.message)
+    }
+  }
   
   validateBookRequest()
 
@@ -71,7 +81,7 @@ exports.createOffer = onCall(async (request) => {
   }
 
   const bookOffer = {
-    sellerID: request.auth.uid,
+    sellerID: getUserID(),
     ISBN: book.ISBN,
     condition: request.data.condition,
     price: parseFloat(request.data.price.replace(',', '.')),

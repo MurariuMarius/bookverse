@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '@/views/Home'
 import Login from '@/views/Login'
-import Profile from '@/views/Profile'
 import Signup from '@/views/Signup'
+import Book from '@/views/Book'
 
 import { authService } from '@/firebase/config'
 
@@ -36,9 +36,10 @@ const routes = [
     beforeEnter: redirectIfAlreadyAuth
   },
   {
-    path: '/profile/:id',
-    name: 'profile',
-    component: Profile,
+    path: '/book/:ISBN',
+    name: 'book',
+    component: Book,
+    props: true,
   },
 ]
 

@@ -39,9 +39,3 @@ button:hover {
 .container button {
   font-size: medium;
 }
-
-.container span {
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: underline;
-}
