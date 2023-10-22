@@ -118,7 +118,8 @@ exports.createOffer = onCall(async (request) => {
     ISBN: book.ISBN,
     condition: request.data.condition,
     price: parseFloat(request.data.price.replace(',', '.')),
-    createdAt: Timestamp.now()
+    createdAt: Timestamp.now(),
+    status: 'new'
   }
 
   try {

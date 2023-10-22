@@ -9,7 +9,7 @@
       </div>
       <div class="offers">
         <h3>Available offers:</h3>
-        <Offer v-for="offer in offersSortedByPrice" :offer="offer" />
+        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" />
         <BookConditionsDescription />
       </div>
     </div>
@@ -23,7 +23,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
-import Offer from '@/components/Offer.vue'
+import OfferPreview from '@/components/OfferPreview.vue'
 import Spinner from '@/components/Spinner.vue'
 
 import useGetOffersForBook from '@/composables/useGetOffersForBook'
@@ -31,7 +31,7 @@ import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
 export default {
-  components: { BookConditionsDescription, Offer, Spinner },
+  components: { BookConditionsDescription, OfferPreview, Spinner },
   props: { ISBN: String },
   setup(props) {
 
