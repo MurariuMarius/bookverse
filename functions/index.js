@@ -3,10 +3,13 @@ const { logger } = require('firebase-functions/v2')
 
 const { initializeApp } = require('firebase-admin/app')
 const { getFirestore, Timestamp } = require('firebase-admin/firestore')
+const { getStorage, getDownloadURL } = require('firebase-admin/storage')
+const { log } = require('firebase-functions/logger')
 
 const app = initializeApp()
 
 const firestoreService = getFirestore()
+const storageBucket = getStorage().bucket()
 
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 
@@ -29,8 +32,15 @@ exports.createOffer = onCall(async (request) => {
 
     const authors = book.authors
     const title = book.title
+    
+    let imageURL = null
+    try {
+      imageURL = book.imageLinks.thumbnail
+    } catch (err) {
+      logger.log(`Could not find image for ${ISBN}`)
+    }
 
-    return { title, authors }
+    return { title, authors, imageURL }
   }
 
   const validateBookRequest = () => {
@@ -74,6 +84,29 @@ exports.createOffer = onCall(async (request) => {
     }
   }
   
+  const addImageURLIfPresent = async (book) => {
+    if (!book.imageURL) {
+      return book
+    }
+
+    const getFileFromURL = async (URL) => {
+      let response = await fetch(URL)
+      let data = await response.blob()
+      let file = data.arrayBuffer()
+      return file
+    }
+
+    const fileRef = storageBucket.file(`books/${book.ISBN}`)
+    const file = await getFileFromURL(book.imageURL)
+    await fileRef.save(new Uint8Array(file))
+
+    const downloadURL = await getDownloadURL(fileRef)
+
+    book.imageURL = downloadURL
+
+    return book
+  }
+
   validateBookRequest()
 
   let book = {
@@ -94,10 +127,16 @@ exports.createOffer = onCall(async (request) => {
   } catch (err) {
     const title = request.data.title.trim()
     const authors = request.data.authors.split(', ')
-
+    
     book = { title: title, authors: authors, ...book }
   }
   
+  try {
+    book = await addImageURLIfPresent(book)
+  } catch (err) {
+    logger.log(err.message)
+  }
+
   try {
     await storeBookIfNotInDB(book)
     await storeOffer(bookOffer)
