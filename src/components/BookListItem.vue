@@ -35,7 +35,7 @@ export default {
     const router = useRouter()
     const { imageSource, getBookIcon } = useGetBookIcon()
 
-    getBookIcon(props.book.ISBN)
+    getBookIcon(props.book.imageURL)
     
     const viewBook = () => {
       router.push({ name: 'book', params: { ISBN: props.book.ISBN }})

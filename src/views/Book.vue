@@ -54,9 +54,10 @@ export default {
     const { imageSource, getBookIcon } = useGetBookIcon()
 
     onMounted(async () => {
-      [book.value, offers.value, ] = await Promise.all(
-        [getDocByID('books', props.ISBN), getOffersForBook(props.ISBN, getBookIcon(props.ISBN))]
+      [book.value, offers.value] = await Promise.all(
+        [getDocByID('books', props.ISBN), getOffersForBook(props.ISBN)]
       )
+      getBookIcon(book.value.imageURL)
     })
 
     const imageLoad = () => {
