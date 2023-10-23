@@ -5,7 +5,7 @@
     </div>
     <div class="menu">
       <div v-if="user">
-        <h2>{{ user.displayName }}</h2>
+        <h2 @click="goToProfile">{{ user.displayName }}</h2>
         <button @click="handleSignout">Sign out</button>
       </div>
       <div v-else>
@@ -38,7 +38,11 @@ export default {
       router.push({ name: 'login' })
     }
 
-    return { user, handleLogin, handleSignout }
+    const goToProfile = () => {
+      router.push({ name: 'profile' })
+    }
+
+    return { user, goToProfile, handleLogin, handleSignout }
   }
 }
 </script>

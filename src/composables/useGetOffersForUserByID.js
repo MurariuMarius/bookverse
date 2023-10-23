@@ -19,14 +19,13 @@ const getOffersForUserByID = async (ID, role) => {
     .get()
   offerSnapshot.forEach(doc => offers.push({...doc.data(), id: doc.id}))
   
-  if (offers.length == 0) {
-    error.value = 'No items found'
-    return null;
-  }
-
+  
   const offersBookMap = new Map();
   
-  const book = await getDocByID('books', offers[0].ISBN)
+  if (offers.length == 0) {
+    error.value = 'No items found'
+    return offersBookMap;
+  }
 
   await Promise.all(
     offers.map(async (offer) => {

@@ -1,12 +1,13 @@
 <template>
   Hello, {{ user.displayName }} 👋
-  <Spinner v-if="!offers.size" />
+  <Spinner v-if="!error && !offers.size" />
   <div v-if="showMessage" class="success">
     <p>{{ message }}</p>
   </div>
   <section class="offers">
     <h1>My offers</h1>
-    <p>Sold items will be marked green.</p>
+    <p v-if="error">You haven't made any offers yet.</p>
+    <p v-else>Sold items will be marked green.</p>
     <div v-if="offers">
       <Offer v-for="[offer, book] in offers" :offer="offer" :book="book" @success="toggleSuccess"/>
     </div>
@@ -64,7 +65,7 @@ export default {
       }, 2500)
     }
 
-    return { offers, user, message, showMessage, toggleSuccess }
+    return { offers, error, user, message, showMessage, toggleSuccess }
   }
 }
 </script>
