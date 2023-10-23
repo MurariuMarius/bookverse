@@ -1,5 +1,5 @@
 <template>
-  Hello, {{ user.displayName }}
+  Hello, {{ user.displayName }} 👋
   <div v-if="showMessage" class="success">
     <p>{{ message }}</p>
   </div>
@@ -42,6 +42,13 @@ export default {
 
       if (route.query.msg) {
         message.value = route.query.msg
+        setTimeout(() => {
+          window.scrollTo({
+            top: parseInt(route.query.s),
+            left: 0,
+            behavior: 'smooth'
+          })
+        }, 200)
         toggleSuccess()
       }
     
@@ -67,6 +74,10 @@ export default {
 }
 
 .success {
+  position: sticky;
+  top: 40px;
+  left: 50vw;
+  transform: translateX(-50%);
   width: 20%;
   min-width: 300px;
   display: flex;

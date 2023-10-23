@@ -56,7 +56,7 @@ export default {
     }
 
     const redirectToProfileWithMessage = (message) => {
-      router.push({ name: 'profile', query: { msg:  message}})
+      router.push({ name: 'profile', query: { msg:  message, s: window.scrollY }})
             setTimeout(() => {
               router.go()
             }, 100)
@@ -68,7 +68,7 @@ export default {
         const offer = {...props.offer, price: price.value, condition: selectedOption.value }
         updateOffer({offer: offer})
           .then(result => {
-            redirectToProfileWithMessage('Offer updated successfully')
+            redirectToProfileWithMessage('Offer updated successfully.')
           })
           .catch(err => {
             console.log(err)
@@ -78,7 +78,7 @@ export default {
 
     const handleDelete = async () => {
       await firestoreService.collection('offers').doc(props.offer.id).delete()
-      redirectToProfileWithMessage('Offer deleted successfully')
+      redirectToProfileWithMessage('Offer deleted successfully.')
     }
 
     return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, handleDelete, selectOption }
