@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" @click="offerClicked">
     <h3 class="price"><pre>{{ offer.price }}  €</pre></h3>
     <div class="details">
       <p class="condition">{{ offer.condition }}</p>
@@ -9,10 +9,23 @@
 </template>
 
 <script>
+import getUser from '@/composables/getUser';
+
 export default {
   props: { offer: Object },
-  setup(props) {
+  emits: ['offerSelected'],
+  setup(props, { emit }) {
 
+    const { user } = getUser()
+
+    const offerClicked = () => {
+      if (user.value != null) {
+        console.log('emit');
+        emit('offerSelected', props.offer)
+      }
+    }
+
+    return { offerClicked }
   }
 }
 </script>

@@ -9,7 +9,7 @@
       </div>
       <div class="offers">
         <h3>Available offers:</h3>
-        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" />
+        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" @offerSelected="getOffer" />
         <BookConditionsDescription />
       </div>
     </div>
@@ -30,11 +30,12 @@ import useGetOffersForBook from '@/composables/useGetOffersForBook'
 import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
+import { shoppingCart } from '@/composables/shoppingCart'
+
 export default {
   components: { BookConditionsDescription, OfferPreview, Spinner },
   props: { ISBN: String },
   setup(props) {
-
     const book = ref(false)
     const offers = ref(null)
     const pageLoaded = ref(false)
@@ -64,7 +65,12 @@ export default {
       pageLoaded.value = true
     }
 
-    return { authors, book, offersSortedByPrice, imageSource, imageLoad, pageLoaded }
+    const getOffer = (offer) => {
+      shoppingCart.addOrder({ book, offer })
+      console.log(shoppingCart.getOrderCount)
+    }
+
+    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, imageLoad, getOffer }
   }
 }
 </script>
