@@ -1,0 +1,133 @@
+<template>
+  <div class="background">
+    <div class="center">
+      <p class="close" @click="close">X</p>
+      <h2>Manage offer</h2>
+      <h4><span class="title">{{ title }}</span> - {{ authors }}</h4>      
+      <form class="inline" @submit.prevent="">
+        <input type="text" :placeholder="offer.price">
+        <p>EUR</p>
+      </form>
+      <div class="options">
+        <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
+      </div>
+      <div class="inline">
+        <button class="update">Update</button>
+        <button class="delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  emits: [ 'close' ],
+  props: { offer: Object, title: String, authors: String },
+  setup(props, { emit }) {
+    const bookConditions = ref(['New', 'As New', 'Good', 'Fair', 'Poor'])
+    const selectedOption = ref('')
+
+    const selectOption = e => {
+      selectedOption.value = e.target.innerHTML
+    }
+
+    const checkPrice = () => {
+      priceError.value = ''
+      if (!/^(([1-9][0-9]{0,8})|0)([.,][0-9]{1,2})?$/.test(price.value.trim())) {
+        priceError.value = 'Invalid price'
+      }
+    }
+
+    const close = () => {
+      emit('close')
+    }
+
+    return { bookConditions, close, selectedOption, selectOption, checkPrice }
+  }
+}
+</script>
+
+<style scoped>
+.close {
+  align-self: flex-end;
+  margin: 25px 25px 0 0;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+h4 {
+  font-weight: 400;
+  font-size: large;
+}
+
+.inline {
+  width: 70%;
+  max-width: 300px;
+  margin: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.inline p {
+  margin-left: 10px;
+}
+
+.center {
+  margin: 30px auto;
+  max-width: 600px;
+  width: 90%;
+  background-color: white;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+}
+.options {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.options button {
+  width: 90px;
+}
+.highlight {
+  background-color: #2fc521;
+}
+
+button {
+  width: 115px;
+  height: 50px;
+}
+
+.delete {
+  background-color: #ff3a3a;
+}
+
+.update {
+  background-color: var(--dark-green);
+}
+
+.delete:hover {
+  cursor: pointer;
+  background-color: #d82e2e;
+}
+
+.update:hover {
+  cursor: pointer;
+  background-color: #019c11;
+}
+
+.background {
+  background-color: var(--light-green);
+}
+
+.title {
+  font-style: italic;
+}
+
+</style>

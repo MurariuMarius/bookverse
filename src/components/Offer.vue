@@ -1,5 +1,6 @@
 <template>
-  <div class="card" :class="offerStatus">
+  <ManageOffer v-if="showManageOffer" :offer="offer" :title="book.title" :authors="authors" @close="toggleManageOffer"/>
+  <div class="card" :class="offerStatus" @click="toggleManageOffer">
     <img :src="imageSource" :alt="book.title">
     <div class="book">
       <h2>{{ book.title }}</h2>
@@ -14,28 +15,37 @@
 </template>
 
 <script>
-import useGetBookIcon from '@/composables/useGetBookIcon';
-import { computed, onMounted, ref } from 'vue';
+import useGetBookIcon from '@/composables/useGetBookIcon'
+import { computed, ref } from 'vue'
+
+import ManageOffer from './ManageOffer.vue'
 
 export default {
   props: { book: Object, offer: Object },
   setup(props) {
-    const { imageSource, getBookIcon } = useGetBookIcon()
-
-    const offerStatus = ref('')
+    const { imageSource, getBookIcon } = useGetBookIcon();
+    const offerStatus = ref('');
+    const showManageOffer = ref(false)
 
     const authors = computed(() => {
-      return props.book.authors.join(', ')
-    })
+        return props.book.authors.join(', ');
+    });
 
     if (props.offer.status === 'sold') {
-      offerStatus.value = 'sold'
+        offerStatus.value = 'sold';
     }
 
-    getBookIcon(props.book.imageURL)
+    getBookIcon(props.book.imageURL);
 
-    return { authors, imageSource, offerStatus }
-  }
+    const toggleManageOffer = () => {
+      if (props.offer.status !== 'sold') {
+        showManageOffer.value = !showManageOffer.value
+      }
+    }
+
+    return { authors, imageSource, offerStatus, showManageOffer, toggleManageOffer };
+  },
+  components: { ManageOffer }
 }
 </script>
 

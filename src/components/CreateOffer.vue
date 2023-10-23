@@ -112,7 +112,6 @@ export default {
   padding: 5px 0px;
 }
 .highlight {
-  margin-top: 100px;
   background-color: #2fc521;
 }
 </style>
