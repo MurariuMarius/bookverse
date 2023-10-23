@@ -14,24 +14,27 @@ const storageBucket = getStorage().bucket()
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 
 exports.updateOffer = onCall(async (request) => {
-  const validateUpdateRequest = (price, condition) => {
-    const validPrice = (price) => {
-      return /^(([1-9][0-9]{0,8})|0)([.,][0-9]{1,2})?$/.test(price)
+  const parseOfferUpdateRequest = (request) => {
+    const validatePrice = (price) => {
+      const validPrice = parseFloat(price.replace(',', '.'))
+      if (isNaN(validPrice)) {
+        throw new HttpsError('invalid-argument', 'Invalid price')
+      }
+      return price
     }
+
+    const condition = request.data.offer.condition
 
     if (!bookConditions.includes(condition)) {
       throw new HttpsError('invalid-argument', 'Invalid book condition')
     }
 
-    if (!validPrice(price)) {
-      throw new HttpsError('invalid-argument', 'Invalid price')
-    }
+    const price = validatePrice(request.data.offer.price)
+
+    return [ price, condition ]
   }
 
-  const price = request.data.offer.price.trim()
-  const condition = request.data.offer.condition
-
-  validateUpdateRequest(price, condition)
+  const [ price, condition ]  = parseOfferUpdateRequest(request)
 
   firestoreService.collection('offers')
     .doc(request.data.offer.id)
