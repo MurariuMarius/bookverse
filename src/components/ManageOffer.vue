@@ -67,13 +67,19 @@ export default {
           })
           .catch(err => {
             console.log(err)
+            redirectToPageWithMessage(router, 'profile', 'A server error occurred.' + err.message, 'error')
           })
       }
     }
 
     const handleDelete = async () => {
-      await firestoreService.collection('offers').doc(props.offer.id).delete()
-      redirectToPageWithMessage(router, 'profile', 'Offer deleted successfully.', 'success')
+      try {
+        await firestoreService.collection('offers').doc(props.offer.id).delete()
+        redirectToPageWithMessage(router, 'profile', 'Offer deleted successfully.', 'success')
+      } catch (err) {
+        redirectToPageWithMessage(router, 'profile', 'A server error occurred.' + err.message, 'error')
+      }
+      
     }
 
     return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, handleDelete, selectOption }

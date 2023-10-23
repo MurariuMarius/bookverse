@@ -50,7 +50,7 @@ export default {
   top: 40px;
   left: 50vw;
   transform: translateX(-50%);
-  width: 20%;
+  width: 30%;
   min-width: 300px;
   display: flex;
   justify-content: center;
@@ -60,5 +60,9 @@ export default {
 
 .success {
   background-color: var(--dark-green);
+}
+
+.error {
+  background-color: var(--error-red);
 }
 </style>
