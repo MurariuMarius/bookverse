@@ -1,5 +1,5 @@
 <template>
-  <ManageOffer v-if="showManageOffer" :offer="offer" :title="book.title" :authors="authors" @close="toggleManageOffer" @success="toggleSuccess"/>
+  <ManageOffer v-if="showManageOffer" :offer="offer" :title="book.title" :authors="authors" @close="toggleManageOffer"/>
   <div class="card" :class="offerStatus" @click="toggleManageOffer">
     <img :src="imageSource" :alt="book.title">
     <div class="book">
@@ -44,11 +44,7 @@ export default {
       }
     }
 
-    const toggleSuccess = () => {
-      emit('success')
-    }
-
-    return { authors, imageSource, offerStatus, showManageOffer, toggleManageOffer, toggleSuccess };
+    return { authors, imageSource, offerStatus, showManageOffer, toggleManageOffer };
   },
   components: { ManageOffer }
 }

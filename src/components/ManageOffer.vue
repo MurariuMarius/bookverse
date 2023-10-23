@@ -23,6 +23,7 @@
 <script>
 import { ref } from 'vue';
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { useRouter } from 'vue-router';
 
 export default {
   emits: [ 'close' ],
@@ -34,6 +35,8 @@ export default {
     const priceError = ref('')
 
     const functions = getFunctions()
+
+    const router = useRouter()
 
     const selectOption = e => {
       selectedOption.value = e.target.innerHTML
@@ -57,8 +60,10 @@ export default {
         const offer = {...props.offer, price: price.value, condition: selectedOption.value }
         updateOffer({offer: offer})
           .then(result => {
-            emit('success')
-            emit('close')
+            router.push({ name: 'profile', query: { msg:  'Offer updated successfully'}})
+            setTimeout(() => {
+              router.go()
+            }, 100)
           })
           .catch(err => {
             console.log(err)

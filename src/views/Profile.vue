@@ -1,7 +1,7 @@
 <template>
   Hello, {{ user.displayName }}
-  <div v-if="success" class="success">
-    <p>Success!</p>
+  <div v-if="showMessage" class="success">
+    <p>{{ message }}</p>
   </div>
   <section class="offers">
     <h1>My offers</h1>
@@ -19,30 +19,43 @@ import Offer from '@/components/Offer.vue'
 
 import getUser from '@/composables/getUser'
 import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   components: { Offer },
-  setup() {
+  setup(props) {
     const { user } = getUser()
 
     const { error, getOffersForUserByID } = useGetOffersForUserByID()
 
+    const route = useRoute()
+    const router = useRouter()
+
     const offers = ref(new Map())
-    const success = ref(false)
+    const showMessage = ref(false)
+
+    const message = ref('')
 
     onMounted(async () => {
       offers.value = await getOffersForUserByID(user.value.uid, 'seller')
       console.log(offers.value);
+
+      if (route.query.msg) {
+        message.value = route.query.msg
+        toggleSuccess()
+      }
+    
     })
 
     const toggleSuccess = () => {
-      success.value = true
+      showMessage.value = true
       setTimeout(() => {
-        success.value = false
+        router.push({ name: 'profile' })
+        showMessage.value = false
       }, 2000)
     }
 
-    return { offers, user, success, toggleSuccess }
+    return { offers, user, message, showMessage, toggleSuccess }
   }
 }
 </script>
