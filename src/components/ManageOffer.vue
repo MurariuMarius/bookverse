@@ -14,7 +14,7 @@
       </div>
       <div class="inline">
         <button class="update" @click="handleUpdate">Update</button>
-        <button class="delete">Delete</button>
+        <button class="delete" @click="handleDelete">Delete</button>
       </div>
     </div>
   </div>
@@ -24,6 +24,7 @@
 import { ref } from 'vue';
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { useRouter } from 'vue-router';
+import { firestoreService } from '@/firebase/config';
 
 export default {
   emits: [ 'close' ],
@@ -54,25 +55,33 @@ export default {
       emit('close')
     }
 
+    const redirectToProfileWithMessage = (message) => {
+      router.push({ name: 'profile', query: { msg:  message}})
+            setTimeout(() => {
+              router.go()
+            }, 100)
+    }
+
     const handleUpdate = () => {
       if (!priceError.value) {        
         const updateOffer = httpsCallable(functions, 'updateOffer')
         const offer = {...props.offer, price: price.value, condition: selectedOption.value }
         updateOffer({offer: offer})
           .then(result => {
-            router.push({ name: 'profile', query: { msg:  'Offer updated successfully'}})
-            setTimeout(() => {
-              router.go()
-            }, 100)
+            redirectToProfileWithMessage('Offer updated successfully')
           })
           .catch(err => {
             console.log(err)
           })
       }
-
     }
 
-    return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, selectOption }
+    const handleDelete = async () => {
+      await firestoreService.collection('offers').doc(props.offer.id).delete()
+      redirectToProfileWithMessage('Offer deleted successfully')
+    }
+
+    return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, handleDelete, selectOption }
   }
 }
 </script>
