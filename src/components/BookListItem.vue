@@ -87,7 +87,7 @@ img {
 }
 
 .price h2 {
-  color: #01bf14;
+  color: var(--dark-green);
   margin-left: 10px
 }
 

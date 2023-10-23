@@ -13,6 +13,34 @@ const storageBucket = getStorage().bucket()
 
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 
+exports.updateOffer = onCall(async (request) => {
+  const parseOfferUpdateRequest = (request) => {
+    const validatePrice = (price) => {
+      const validPrice = parseFloat(price.replace(',', '.'))
+      if (isNaN(validPrice)) {
+        throw new HttpsError('invalid-argument', 'Invalid price')
+      }
+      return price
+    }
+
+    const condition = request.data.offer.condition
+
+    if (!bookConditions.includes(condition)) {
+      throw new HttpsError('invalid-argument', 'Invalid book condition')
+    }
+
+    const price = validatePrice(request.data.offer.price)
+
+    return [ price, condition ]
+  }
+
+  const [ price, condition ]  = parseOfferUpdateRequest(request)
+
+  firestoreService.collection('offers')
+    .doc(request.data.offer.id)
+    .update({ price, condition })
+})
+
 exports.createOffer = onCall(async (request) => {
   const getBookDetails = async (ISBN) => {
     const bookFound = () => {
@@ -118,7 +146,8 @@ exports.createOffer = onCall(async (request) => {
     ISBN: book.ISBN,
     condition: request.data.condition,
     price: parseFloat(request.data.price.replace(',', '.')),
-    createdAt: Timestamp.now()
+    createdAt: Timestamp.now(),
+    status: 'new'
   }
 
   try {
