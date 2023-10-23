@@ -1,5 +1,5 @@
 <template>
-  <ManageOffer v-if="showManageOffer" :offer="offer" :title="book.title" :authors="authors" @close="toggleManageOffer"/>
+  <ManageOffer v-if="showManageOffer" :offer="offer" :title="book.title" :authors="authors" @close="toggleManageOffer" @success="toggleSuccess"/>
   <div class="card" :class="offerStatus" @click="toggleManageOffer">
     <img :src="imageSource" :alt="book.title">
     <div class="book">
@@ -21,8 +21,9 @@ import { computed, ref } from 'vue'
 import ManageOffer from './ManageOffer.vue'
 
 export default {
+  emits: ['success'],
   props: { book: Object, offer: Object },
-  setup(props) {
+  setup(props, { emit }) {
     const { imageSource, getBookIcon } = useGetBookIcon();
     const offerStatus = ref('');
     const showManageOffer = ref(false)
@@ -43,7 +44,11 @@ export default {
       }
     }
 
-    return { authors, imageSource, offerStatus, showManageOffer, toggleManageOffer };
+    const toggleSuccess = () => {
+      emit('success')
+    }
+
+    return { authors, imageSource, offerStatus, showManageOffer, toggleManageOffer, toggleSuccess };
   },
   components: { ManageOffer }
 }

@@ -17,7 +17,7 @@ const getOffersForUserByID = async (ID, role) => {
   const offerSnapshot = await firestoreService.collection('offers')
     .where(role === 'seller' ? 'sellerID' : 'buyerID', '==', ID)
     .get()
-  offerSnapshot.forEach(doc => offers.push(doc.data()))
+  offerSnapshot.forEach(doc => offers.push({...doc.data(), id: doc.id}))
   
   if (offers.length == 0) {
     error.value = 'No items found'

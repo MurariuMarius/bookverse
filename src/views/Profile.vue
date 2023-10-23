@@ -1,10 +1,13 @@
 <template>
   Hello, {{ user.displayName }}
+  <div v-if="success" class="success">
+    <p>Success!</p>
+  </div>
   <section class="offers">
     <h1>My offers</h1>
     <p>Sold items will be marked green.</p>
     <div v-if="offers">
-      <Offer v-for="[offer, book] in offers" :offer="offer" :book="book" />
+      <Offer v-for="[offer, book] in offers" :offer="offer" :book="book" @success="toggleSuccess"/>
     </div>
   </section>
 </template>
@@ -25,13 +28,21 @@ export default {
     const { error, getOffersForUserByID } = useGetOffersForUserByID()
 
     const offers = ref(new Map())
+    const success = ref(false)
 
     onMounted(async () => {
       offers.value = await getOffersForUserByID(user.value.uid, 'seller')
       console.log(offers.value);
     })
 
-    return { offers, user }
+    const toggleSuccess = () => {
+      success.value = true
+      setTimeout(() => {
+        success.value = false
+      }, 2000)
+    }
+
+    return { offers, user, success, toggleSuccess }
   }
 }
 </script>
@@ -40,5 +51,15 @@ export default {
 .offers {
   margin: auto;
   max-width: 1300px;
+}
+
+.success {
+  width: 20%;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+  background-color: var(--dark-green);
+  border-radius: 25px;
+  color: white;
 }
 </style>

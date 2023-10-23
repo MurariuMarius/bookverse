@@ -5,14 +5,15 @@
       <h2>Manage offer</h2>
       <h4><span class="title">{{ title }}</span> - {{ authors }}</h4>      
       <form class="inline" @submit.prevent="">
-        <input type="text" :placeholder="offer.price">
+        <input type="text" @blur="checkPrice" v-model="price">
         <p>EUR</p>
       </form>
+      <p v-if="priceError" class="error">{{ priceError }}</p>
       <div class="options">
         <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
       </div>
       <div class="inline">
-        <button class="update">Update</button>
+        <button class="update" @click="handleUpdate">Update</button>
         <button class="delete">Delete</button>
       </div>
     </div>
@@ -21,13 +22,18 @@
 
 <script>
 import { ref } from 'vue';
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export default {
   emits: [ 'close' ],
   props: { offer: Object, title: String, authors: String },
   setup(props, { emit }) {
     const bookConditions = ref(['New', 'As New', 'Good', 'Fair', 'Poor'])
-    const selectedOption = ref('')
+    const selectedOption = ref(`${props.offer.condition}`)
+    const price = ref(`${props.offer.price}`)
+    const priceError = ref('')
+
+    const functions = getFunctions()
 
     const selectOption = e => {
       selectedOption.value = e.target.innerHTML
@@ -36,6 +42,7 @@ export default {
     const checkPrice = () => {
       priceError.value = ''
       if (!/^(([1-9][0-9]{0,8})|0)([.,][0-9]{1,2})?$/.test(price.value.trim())) {
+        console.log('check price');
         priceError.value = 'Invalid price'
       }
     }
@@ -44,7 +51,23 @@ export default {
       emit('close')
     }
 
-    return { bookConditions, close, selectedOption, selectOption, checkPrice }
+    const handleUpdate = () => {
+      if (!priceError.value) {        
+        const updateOffer = httpsCallable(functions, 'updateOffer')
+        const offer = {...props.offer, price: price.value, condition: selectedOption.value }
+        updateOffer({offer: offer})
+          .then(result => {
+            emit('success')
+            emit('close')
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+
+    }
+
+    return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, selectOption }
   }
 }
 </script>
@@ -94,6 +117,7 @@ h4 {
 }
 .options button {
   width: 90px;
+  height: 40px;
 }
 .highlight {
   background-color: #2fc521;
