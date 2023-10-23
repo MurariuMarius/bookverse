@@ -34,6 +34,12 @@ const getBooksWithOffers = async (search) => {
   
   const booksWithOffers = new Map();
   
+  if (filteredBooks.length == 0) {
+    console.log('No itmes found')
+    error.value = 'No items found'
+    return booksWithOffers;
+  }
+
   await Promise.all(
     filteredBooks.map(async (book) => {
       const offersForBook = await getOffersForBook(book.ISBN)
