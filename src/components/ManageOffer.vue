@@ -26,6 +26,8 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 import { useRouter } from 'vue-router';
 import { firestoreService } from '@/firebase/config';
 
+import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage';
+
 export default {
   emits: [ 'close' ],
   props: { offer: Object, title: String, authors: String },
@@ -55,20 +57,13 @@ export default {
       emit('close')
     }
 
-    const redirectToProfileWithMessage = (message) => {
-      router.push({ name: 'profile', query: { msg:  message, s: window.scrollY }})
-            setTimeout(() => {
-              router.go()
-            }, 100)
-    }
-
     const handleUpdate = () => {
       if (!priceError.value) {        
         const updateOffer = httpsCallable(functions, 'updateOffer')
         const offer = {...props.offer, price: price.value, condition: selectedOption.value }
         updateOffer({offer: offer})
           .then(result => {
-            redirectToProfileWithMessage('Offer updated successfully.')
+            redirectToPageWithMessage(router, 'profile', 'Offer updated successfully.', 'success')
           })
           .catch(err => {
             console.log(err)
@@ -78,7 +73,7 @@ export default {
 
     const handleDelete = async () => {
       await firestoreService.collection('offers').doc(props.offer.id).delete()
-      redirectToProfileWithMessage('Offer deleted successfully.')
+      redirectToPageWithMessage(router, 'profile', 'Offer deleted successfully.', 'success')
     }
 
     return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, handleDelete, selectOption }

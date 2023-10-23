@@ -1,15 +1,13 @@
 <template>
   Hello, {{ user.displayName }} 👋
   <Spinner v-if="!error && !offers.size" />
-  <div v-if="showMessage" class="success">
-    <p>{{ message }}</p>
-  </div>
+  <Notification v-else :route="route" :window="getWindow()" />
   <section class="offers">
     <h1>My offers</h1>
     <p v-if="error">You haven't made any offers yet.</p>
     <p v-else>Sold items will be marked green.</p>
     <div v-if="offers">
-      <Offer v-for="[offer, book] in offers" :offer="offer" :book="book" @success="toggleSuccess"/>
+      <Offer v-for="[offer, book] in offers" :offer="offer" :book="book"/>
     </div>
   </section>
 </template>
@@ -17,6 +15,7 @@
 <script>
 import { onMounted, ref } from 'vue'
 
+import Notification from '@/components/Notification.vue'
 import Offer from '@/components/Offer.vue'
 import Spinner from '@/components/Spinner.vue'
 
@@ -25,14 +24,13 @@ import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
-  components: { Offer, Spinner },
+  components: { Notification, Offer, Spinner },
   setup(props) {
     const { user } = getUser()
 
     const { error, getOffersForUserByID } = useGetOffersForUserByID()
 
     const route = useRoute()
-    const router = useRouter()
 
     const offers = ref(new Map())
     const showMessage = ref(false)
@@ -41,31 +39,13 @@ export default {
 
     onMounted(async () => {
       offers.value = await getOffersForUserByID(user.value.uid, 'seller')
-      console.log(offers.value);
-
-      if (route.query.msg) {
-        message.value = route.query.msg
-        setTimeout(() => {
-          window.scrollTo({
-            top: parseInt(route.query.s),
-            left: 0,
-            behavior: 'smooth'
-          })
-        }, 200)
-        toggleSuccess()
-      }
-    
     })
 
-    const toggleSuccess = () => {
-      showMessage.value = true
-      setTimeout(() => {
-        router.push({ name: 'profile' })
-        showMessage.value = false
-      }, 2500)
+    const getWindow = () => {
+      return window
     }
 
-    return { offers, error, user, message, showMessage, toggleSuccess }
+    return { offers, error, route, user, message, showMessage, getWindow }
   }
 }
 </script>
@@ -76,17 +56,4 @@ export default {
   max-width: 1300px;
 }
 
-.success {
-  position: sticky;
-  top: 40px;
-  left: 50vw;
-  transform: translateX(-50%);
-  width: 20%;
-  min-width: 300px;
-  display: flex;
-  justify-content: center;
-  background-color: var(--dark-green);
-  border-radius: 25px;
-  color: white;
-}
 </style>
