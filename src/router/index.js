@@ -4,6 +4,7 @@ import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Signup from '@/views/Signup'
 import Book from '@/views/Book'
+import Profile from '@/views/Profile'
 
 import { authService } from '@/firebase/config'
 
@@ -40,6 +41,11 @@ const routes = [
     name: 'book',
     component: Book,
     props: true,
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
   },
 ]
 
