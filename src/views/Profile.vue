@@ -1,5 +1,6 @@
 <template>
   Hello, {{ user.displayName }} 👋
+  <Spinner v-if="!offers.size" />
   <div v-if="showMessage" class="success">
     <p>{{ message }}</p>
   </div>
@@ -16,13 +17,14 @@
 import { onMounted, ref } from 'vue'
 
 import Offer from '@/components/Offer.vue'
+import Spinner from '@/components/Spinner.vue'
 
 import getUser from '@/composables/getUser'
 import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
-  components: { Offer },
+  components: { Offer, Spinner },
   setup(props) {
     const { user } = getUser()
 
@@ -59,7 +61,7 @@ export default {
       setTimeout(() => {
         router.push({ name: 'profile' })
         showMessage.value = false
-      }, 2000)
+      }, 2500)
     }
 
     return { offers, user, message, showMessage, toggleSuccess }
