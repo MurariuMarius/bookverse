@@ -1,8 +1,5 @@
 <template>
   <nav>
-    <div class="search">
-      
-    </div>
     <div class="menu">
       <div v-if="user">
         <h2 @click="goToProfile">{{ user.displayName }}</h2>
@@ -49,7 +46,6 @@ export default {
 
 <style scoped>
 .menu {
-  width: 50%;
   margin-right: 0;
 }
 
