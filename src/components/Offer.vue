@@ -66,7 +66,7 @@ img {
   margin: 0;
   font-weight: 800;
   font-size: x-large;
-  color: #01bf14;
+  color: var(--dark-green);
 }
 
 .book {
@@ -97,7 +97,7 @@ p {
 }
 
 .sold {
-  background-color: #e7fdea;
+  background-color: var(--light-green);
 }
 
 </style>

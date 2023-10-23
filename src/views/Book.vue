@@ -72,7 +72,7 @@ export default {
 <style scoped>
 .book {
   margin: 20px auto;
-  background-color: #e7fdea;
+  background-color: var(--light-green);
   border-radius: 20px;
   width: 100%;
   display: flex;

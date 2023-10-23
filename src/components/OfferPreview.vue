@@ -37,7 +37,7 @@ export default {
   margin: 0;
   font-weight: 800;
   font-size: x-large;
-  color: #01bf14;
+  color: var(--dark-green);
 }
 
 .details {

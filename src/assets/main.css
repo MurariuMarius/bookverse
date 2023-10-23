@@ -4,9 +4,26 @@
   font-family: 'Poppins', sans-serif;
 }
 
+:root {
+  --x-light-green: #f4fff4;
+  --light-green: #e7fdea;
+  --dark-green: #01bf14;
+}
+
 .container {
   width: 90%;
   margin: 50px auto;
+}
+
+.background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 button {

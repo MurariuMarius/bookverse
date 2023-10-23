@@ -67,6 +67,6 @@ button {
 nav {
   width: 100%;
   border-radius: 15px;
-  background-image: linear-gradient(to bottom right, #69c606, #01bf14);
+  background-image: linear-gradient(to bottom right, #69c606, var(--dark-green));
 }
 </style>
