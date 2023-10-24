@@ -8,4 +8,17 @@ export const shoppingCart = reactive({
   getOrderCount() {
     return this.orders.length
   },
+  setOrders(orders) {
+    if (orders != null) {
+      this.orders = orders
+    } else {
+      this.empty()
+    }
+  },
+  getOrders() {
+    return this.orders
+  },
+  empty() {
+    this.orders = []
+  }
 })
