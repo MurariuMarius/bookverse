@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showOrder" class="card" @click="removeOrder">
+  <div class="card" @click="removeOrder">
     <img :src="imageSource" :alt="order.book.title">
     <div class="book">
       <h2>{{ order.book.title }}</h2>
@@ -16,15 +16,13 @@
 <script>
 import { shoppingCart } from '@/composables/shoppingCart';
 import useGetBookIcon from '@/composables/useGetBookIcon'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 export default {
   props: { order: Object },
-  setup(props, { emit }) {
+  setup(props) {
     const { imageSource, getBookIcon } = useGetBookIcon();
       
-    const showOrder = ref(true)
-
     const authors = computed(() => {
         return props.order.book.authors.join(', ');
     });
@@ -32,11 +30,10 @@ export default {
     getBookIcon(props.order.book.imageURL);
 
     const removeOrder = () => {
-      showOrder.value = false
       shoppingCart.removeOrder(props.order)
     }
 
-    return { authors, imageSource, showOrder, removeOrder };
+    return { authors, imageSource, removeOrder };
   },
 }
 </script>
