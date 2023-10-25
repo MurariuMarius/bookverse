@@ -1,4 +1,5 @@
 <template>
+  <Notification :route="route"/>
   <div class="book" v-if="book">
     <div class="headSection">
       <div class="bookDetails">
@@ -9,7 +10,7 @@
       </div>
       <div class="offers">
         <h3>Available offers:</h3>
-        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" @offerSelected="getOffer" />
+        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" @offerSelected="addItemToShoppingCart" />
         <BookConditionsDescription />
       </div>
     </div>
@@ -23,6 +24,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
+import Notification from '@/components/Notification.vue'
 import OfferPreview from '@/components/OfferPreview.vue'
 import Spinner from '@/components/Spinner.vue'
 
@@ -31,19 +33,25 @@ import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
 import { shoppingCart } from '@/composables/shoppingCart'
+import { useRoute, useRouter } from 'vue-router'
+import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
 
 export default {
-  components: { BookConditionsDescription, OfferPreview, Spinner },
+  components: { BookConditionsDescription, Notification, OfferPreview, Spinner },
   props: { ISBN: String },
   setup(props) {
     const book = ref(false)
     const offers = ref(null)
     const pageLoaded = ref(false)
 
+    const route = useRoute()
+    const router = useRouter()
+
+    
     const authors = computed(() => {
       return book.value.authors.join(', ')
     })
-
+    
     const offersSortedByPrice = computed(() => {
       if (offers.value) {
         return offers.value.sort((a, b) => a.price - b.price)
@@ -60,17 +68,18 @@ export default {
       )
       getBookIcon(book.value.imageURL)
     })
-
+    
     const imageLoad = () => {
       pageLoaded.value = true
     }
-
-    const getOffer = (offer) => {
+    
+    const addItemToShoppingCart = (offer) => {
       shoppingCart.addOrder({ book, offer })
       console.log(shoppingCart.getOrderCount)
+      redirectToPageWithMessage(router, route.name, 'Item added to cart.', 'success')
     }
-
-    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, imageLoad, getOffer }
+    
+    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, route, imageLoad, addItemToShoppingCart }
   }
 }
 </script>

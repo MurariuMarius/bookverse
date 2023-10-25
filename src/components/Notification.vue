@@ -28,13 +28,15 @@ export default {
       if (props.route.query.msg) {
           message.value = props.route.query.msg
           notificationType.value = props.route.query.t
-          setTimeout(() => {
-            props.window.scrollTo({
-              top: parseInt(props.route.query.s),
-              left: 0,
-              behavior: 'smooth'
-            })
-          }, 500)
+          if (props.window) {
+            setTimeout(() => {
+              props.window.scrollTo({
+                top: parseInt(props.route.query.s),
+                left: 0,
+                behavior: 'smooth'
+              })
+            }, 500)
+          }
           toggleMessage()
       }
     })
