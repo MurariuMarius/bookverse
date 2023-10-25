@@ -1,5 +1,5 @@
 <template>
-  <Notification :route="route"/>
+  <Notification v-if="showNotification" message="Item added to cart." type="success" />
   <div class="book" v-if="book">
     <div class="headSection">
       <div class="bookDetails">
@@ -33,8 +33,6 @@ import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
 import { shoppingCart } from '@/composables/shoppingCart'
-import { useRoute, useRouter } from 'vue-router'
-import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
 
 export default {
   components: { BookConditionsDescription, Notification, OfferPreview, Spinner },
@@ -44,10 +42,8 @@ export default {
     const offers = ref(null)
     const pageLoaded = ref(false)
 
-    const route = useRoute()
-    const router = useRouter()
+    const showNotification = ref(false)
 
-    
     const authors = computed(() => {
       return book.value.authors.join(', ')
     })
@@ -76,10 +72,11 @@ export default {
     const addItemToShoppingCart = (offer) => {
       shoppingCart.addOrder({ book, offer })
       console.log(shoppingCart.getOrderCount)
-      redirectToPageWithMessage(router, route.name, 'Item added to cart.', 'success')
+      showNotification.value = true
+      setTimeout(() => showNotification.value = false, 2000)
     }
     
-    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, route, imageLoad, addItemToShoppingCart }
+    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, showNotification, imageLoad, addItemToShoppingCart }
   }
 }
 </script>

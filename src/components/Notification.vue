@@ -1,47 +1,13 @@
 <template>
-  <div v-if="showMessage" class="notification" :class="notificationType">
+  <div class="notification" :class="type">
     <p>{{ message }}</p>
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 export default {
-  props: { route: Object, window: Window },
+  props: { message: String, type: String },
   setup(props) {
-
-    const router = useRouter()
-    const message = ref('')
-    const notificationType = ref('')
-    const showMessage = ref(false)
-
-    const toggleMessage = () => {
-      showMessage.value = true
-      setTimeout(() => {
-        router.push({ name: props.route.name })
-        showMessage.value = false
-      }, 2000)
-    }
-
-    onMounted(() => {
-      if (props.route.query.msg) {
-          message.value = props.route.query.msg
-          notificationType.value = props.route.query.t
-          if (props.window) {
-            setTimeout(() => {
-              props.window.scrollTo({
-                top: parseInt(props.route.query.s),
-                left: 0,
-                behavior: 'smooth'
-              })
-            }, 500)
-          }
-          toggleMessage()
-      }
-    })
-
-    return { message, showMessage, notificationType }
   }
 }
 </script>
