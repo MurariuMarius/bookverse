@@ -32,7 +32,8 @@ export default {
     getBookIcon(props.order.book.imageURL);
 
     const removeOrder = () => {
-      // TODO
+      showOrder.value = false
+      shoppingCart.removeOrder(props.order)
     }
 
     return { authors, imageSource, showOrder, removeOrder };

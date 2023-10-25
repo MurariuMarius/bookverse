@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 
-export const shoppingCart = reactive({
+const shoppingCart = reactive({
   orders: [],
   addOrder(order) {
     this.orders.push(order)
@@ -20,5 +20,19 @@ export const shoppingCart = reactive({
   },
   empty() {
     this.orders = []
+  },
+  removeOrder(order) {
+    this.orders = this.orders.reduce(
+      (acc, el) => {
+        if (el == order && !acc.foundFirst) {
+          acc.foundFirst = true
+        } else {
+          acc.orders.push(el)
+        }
+        return acc
+      },
+      { orders: [], foundFirst: false }
+    ).orders
   }
 })
+export { shoppingCart }
