@@ -1,9 +1,11 @@
 <template>
-  {{ shoppingCart.getOrderCount() }}
   <nav>
     <div class="menu">
       <div v-if="user">
-        <img src="@/assets/shopping-cart.svg" alt="shopping-cart" class="shopping-cart" @click="goToShoppingCart">
+        <div class="shopping-cart">
+          <p v-show="shoppingCartItemCount" >{{ shoppingCartItemCount }}</p>
+          <img src="@/assets/shopping-cart.svg" alt="shopping-cart" @click="goToShoppingCart">
+        </div>
         <h2 @click="goToProfile">{{ user.displayName }}</h2>
         <button @click="handleSignout">Sign out</button>
       </div>
@@ -22,6 +24,7 @@ import useSignout from '@/composables/useSignout'
 import getUser from '@/composables/getUser'
 
 import { shoppingCart } from '@/composables/shoppingCart'
+import { computed } from 'vue'
 
 export default {
   setup() {
@@ -29,6 +32,10 @@ export default {
     const { user } = getUser()
 
     const { error, signout } = useSignout()
+
+    const shoppingCartItemCount = computed(() => {
+      return shoppingCart.getOrderCount()
+    })
 
     const handleSignout = async () => {
       await signout()
@@ -46,7 +53,7 @@ export default {
       router.push({ name: 'shoppingCart' })
     }
 
-    return { shoppingCart, user, goToProfile, handleLogin, handleSignout, goToShoppingCart }
+    return { shoppingCart, user, shoppingCartItemCount, goToProfile, handleLogin, handleSignout, goToShoppingCart }
   }
 }
 </script>
@@ -56,7 +63,7 @@ export default {
   margin-right: 0;
 }
 
-.menu div {
+.menu > div {
   width: 100%;
   display: inline-flex;
   align-items: center;
@@ -77,14 +84,28 @@ nav {
   background-image: linear-gradient(to bottom right, #69c606, var(--dark-green));
 }
 
-.shopping-cart
- {
+.shopping-cart {
+  position: relative;
+  margin: 0;
+}
+
+.shopping-cart img {
   height: 50px;
   margin-right: 15px;
 }
 
-.shopping-cart:hover {
+.shopping-cart img:hover {
   cursor: pointer;
+}
+
+.shopping-cart p {
+  background-color: #ff0000;
+  border-radius: 50%;
+  padding-left: 15%;
+  padding-right: 15%;
+  position: absolute;
+  top: -40%;
+  left: 60%;
 }
 
 </style>
