@@ -37,11 +37,17 @@
 </template>
 
 <script>
-import { shoppingCart } from '@/composables/shoppingCart';
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+
+import { shoppingCart } from '@/composables/shoppingCart'
+import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
+    const functions = getFunctions()
+
     const orders = ref(shoppingCart.getOrders())
 
     const name = ref('')
@@ -53,6 +59,8 @@ export default {
 
     const agreedTermsOfService = ref(false)
     const saveDeliveryDetails = ref(false)
+
+    const router = useRouter()
 
     const total = ref(orders.value
         .map(o => o.offer.price)
@@ -69,7 +77,7 @@ export default {
       return true
     }
 
-    const placeOrder = () => {
+    const placeOrder = async () => {
       if (!isValidPhone() || !name.value || !address.value) {
         return
       }
@@ -77,7 +85,16 @@ export default {
       if (!agreedTermsOfService.value) {
         agreedTermsOfServiceError.value = 'You must agree to the terms of service'
       }
-      console.log('submitted');
+
+      const createOrder = httpsCallable(functions, 'createOrder')
+      try {
+        await createOrder({ items: orders.value, name: name.value, phone: phone.value, address: address.value })
+        shoppingCart.empty()
+        redirectToPageWithMessage(router, 'profile', 'Ordered placed successfully.', 'success')
+      } catch (err) {
+        console.log(err.message);
+        redirectToPageWithMessage(router, 'profile', 'Server error' + err.message, 'error')
+      }
     }
 
     return { address, name, orders, phone, phoneError, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, isValidPhone, placeOrder }
