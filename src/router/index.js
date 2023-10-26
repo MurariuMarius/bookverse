@@ -6,6 +6,7 @@ import Signup from '@/views/Signup'
 import Book from '@/views/Book'
 import Profile from '@/views/Profile'
 import ShoppingCart from '@/views/ShoppingCart'
+import Checkout from '@/views/Checkout'
 
 import { authService } from '@/firebase/config'
 
@@ -52,7 +53,12 @@ const routes = [
     path: '/cart',
     name: 'shoppingCart',
     component: ShoppingCart,
-  }
+  },
+  {
+    path: '/checkout',
+    name: 'checkout',
+    component: Checkout,
+  },
 ]
 
 const router = createRouter({
