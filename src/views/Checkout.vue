@@ -13,10 +13,11 @@
       <section class="delivery-details">
         <h3>Delivery details:</h3>
         <form @submit.prevent="">
-          <input type="text" placeholder="Full name" required :v-model="name">
-          <input type="text" placeholder="Phone number" required :v-model="phone">
-          <textarea type="text" placeholder="Delivery address" required :v-model="address"></textarea>
+          <input type="text" placeholder="Full name" required v-model="name">
+          <input type="text" placeholder="Phone number" required v-model="phone" @blur="isValidPhone">
+          <textarea type="text" placeholder="Delivery address" required v-model="address"></textarea>
         </form>
+        <p class="error" v-if="phoneError">{{ phoneError }}</p>
         <span>
           <input type="checkbox" class="checkbox" :v-model="saveDeliveryDetails">
           <label>Save delivery details to my account.</label>
@@ -24,11 +25,12 @@
       </section>
       <section class="place-order">
         <p>Payment by cash or card on delivery.</p>
+        <p class="error" v-if="agreedTermsOfServiceError">{{ agreedTermsOfServiceError }}</p>
         <span>
-          <input type="checkbox" class="checkbox" v-model="agreedTermsAndConditions">
+          <input type="checkbox" class="checkbox" v-model="agreedTermsOfService">
           <label for="checkbox">I have read and agree to the terms of service.</label>
         </span>
-        <button>Place order</button>
+        <button @click="placeOrder">Place order</button>
       </section>
     </section>
   </div>
@@ -45,8 +47,11 @@ export default {
     const name = ref('')
     const phone = ref('')
     const address = ref('')
+    
+    const phoneError = ref('')
+    const agreedTermsOfServiceError = ref('')
 
-    const agreedTermsAndConditions = ref(false)
+    const agreedTermsOfService = ref(false)
     const saveDeliveryDetails = ref(false)
 
     const total = ref(orders.value
@@ -55,7 +60,27 @@ export default {
         .toFixed(2)
     )
 
-    return { address, name, orders, phone, total, agreedTermsAndConditions, saveDeliveryDetails }
+    const isValidPhone = () => {
+      if (!/^[\+0][0-9]{6,15}$/.test(phone.value)) {
+        phoneError.value = 'Invalid phone number'
+        return false
+      }
+      phoneError.value = ''
+      return true
+    }
+
+    const placeOrder = () => {
+      if (!isValidPhone() || !name.value || !address.value) {
+        return
+      }
+      
+      if (!agreedTermsOfService.value) {
+        agreedTermsOfServiceError.value = 'You must agree to the terms of service'
+      }
+      console.log('submitted');
+    }
+
+    return { address, name, orders, phone, phoneError, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, isValidPhone, placeOrder }
   }
 }
 </script>
