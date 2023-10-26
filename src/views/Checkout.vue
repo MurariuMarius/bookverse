@@ -5,7 +5,7 @@
       <h3>Your shopping cart:</h3>
       <div class="orders" v-for="order in orders" :key="order">
         <p>{{ order.book.title }}</p>
-        <p>{{ order.offer.price }}</p>
+        <p>{{ order.offer.price }} €</p>
       </div>
       <h3 class="total">Total: {{ total }} €</h3>
     </section>
@@ -71,7 +71,7 @@ export default {
   row-gap: 25px;
 }
 
-.delivery{
+.delivery {
   display: flex;
   flex-direction: column;
   flex-grow: 0.4;
@@ -100,6 +100,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin: 0;
 }
 
 .place-order {

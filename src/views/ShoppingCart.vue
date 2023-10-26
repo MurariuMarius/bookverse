@@ -7,6 +7,7 @@
       <Order v-for="order in orders" :key="order" :order="order" />
       <h2>Total: {{ total }} €</h2>
     </div>
+    <button @click="goToCheckout">Proceed to checkout</button>
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import Order from '@/components/Order.vue'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
   components: { Order },
@@ -26,7 +28,14 @@ export default {
         .reduce((acc, el) => acc += parseFloat(el), 0)
         .toFixed(2)
     })
-    return { orders, total }
+    
+    const router = useRouter()
+
+    const goToCheckout = () => {
+      router.push('checkout')
+    }
+
+    return { orders, total, goToCheckout }
   }
 }
 </script>
