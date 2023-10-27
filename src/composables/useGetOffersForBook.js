@@ -8,6 +8,7 @@ const getOffersForBook = async (ISBN) => {
   console.log('Searching for ' + ISBN);
   const snapshot = await firestoreService.collection('offers')
     .where('ISBN', '==', ISBN)
+    .where('status', '==', 'available')
     .get()
   snapshot.forEach(doc => offers.push({...doc.data(), id: doc.id}))
   return offers

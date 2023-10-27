@@ -114,7 +114,7 @@ exports.createOffer = onCall(async (request) => {
     condition: request.data.condition,
     price: parseFloat(request.data.price.replace(',', '.')),
     createdAt: Timestamp.now(),
-    status: 'new'
+    status: 'available'
   }
 
   try {
