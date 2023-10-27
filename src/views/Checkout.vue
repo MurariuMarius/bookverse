@@ -18,7 +18,7 @@
           <textarea type="text" placeholder="Delivery address" required v-model="address"></textarea>
         </form>
         <p class="error" v-if="phoneError">{{ phoneError }}</p>
-        <span>
+        <span v-if="noStoredUserData">
           <input type="checkbox" class="checkbox" v-model="saveDeliveryDetails">
           <label>Save delivery details to my account.</label>
         </span>
@@ -37,12 +37,14 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
 import { useRouter } from 'vue-router'
+import getUser from '@/composables/getUser'
+import { firestoreService } from '@/firebase/config'
 
 export default {
   setup() {
@@ -59,9 +61,22 @@ export default {
 
     const agreedTermsOfService = ref(false)
     const saveDeliveryDetails = ref(false)
+    const noStoredUserData = ref(true)
 
     const router = useRouter()
 
+    const { user } = getUser()
+
+    onMounted(async () => {
+      const userData = (await firestoreService.collection('users').doc(user.value.uid).get()).data()
+      if (userData.name) {
+        name.value = userData.name
+        phone.value = userData.phone
+        address.value = userData.address
+        noStoredUserData.value = false
+      }
+    })
+    
     const total = ref(orders.value
         .map(o => o.offer.price)
         .reduce((acc, el) => acc += parseFloat(el), 0)
@@ -104,7 +119,7 @@ export default {
       }
     }
 
-    return { address, name, orders, phone, phoneError, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, isValidPhone, placeOrder }
+    return { address, name, orders, phone, phoneError, noStoredUserData, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, isValidPhone, placeOrder }
   }
 }
 </script>

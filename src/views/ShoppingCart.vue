@@ -6,8 +6,8 @@
       <p>Click on an item to remove it.</p>
       <Order v-for="order in orders" :key="order" :order="order" />
       <h2>Total: {{ total }} €</h2>
+      <button @click="goToCheckout">Proceed to checkout</button>
     </div>
-    <button @click="goToCheckout">Proceed to checkout</button>
   </div>
 </template>
 
