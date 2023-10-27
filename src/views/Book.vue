@@ -1,4 +1,5 @@
 <template>
+  <Notification v-if="showNotification" message="Item added to cart." type="success" />
   <div class="book" v-if="book">
     <div class="headSection">
       <div class="bookDetails">
@@ -9,7 +10,7 @@
       </div>
       <div class="offers">
         <h3>Available offers:</h3>
-        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" />
+        <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" @offerSelected="addItemToShoppingCart" />
         <BookConditionsDescription />
       </div>
     </div>
@@ -23,6 +24,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
+import Notification from '@/components/Notification.vue'
 import OfferPreview from '@/components/OfferPreview.vue'
 import Spinner from '@/components/Spinner.vue'
 
@@ -30,19 +32,22 @@ import useGetOffersForBook from '@/composables/useGetOffersForBook'
 import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
 
+import { shoppingCart } from '@/composables/shoppingCart'
+
 export default {
-  components: { BookConditionsDescription, OfferPreview, Spinner },
+  components: { BookConditionsDescription, Notification, OfferPreview, Spinner },
   props: { ISBN: String },
   setup(props) {
-
     const book = ref(false)
     const offers = ref(null)
     const pageLoaded = ref(false)
 
+    const showNotification = ref(false)
+
     const authors = computed(() => {
       return book.value.authors.join(', ')
     })
-
+    
     const offersSortedByPrice = computed(() => {
       if (offers.value) {
         return offers.value.sort((a, b) => a.price - b.price)
@@ -59,12 +64,19 @@ export default {
       )
       getBookIcon(book.value.imageURL)
     })
-
+    
     const imageLoad = () => {
       pageLoaded.value = true
     }
-
-    return { authors, book, offersSortedByPrice, imageSource, imageLoad, pageLoaded }
+    
+    const addItemToShoppingCart = (offer) => {
+      shoppingCart.addOrder({ book, offer })
+      console.log(shoppingCart.getOrderCount)
+      showNotification.value = true
+      setTimeout(() => showNotification.value = false, 2000)
+    }
+    
+    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, showNotification, imageLoad, addItemToShoppingCart }
   }
 }
 </script>

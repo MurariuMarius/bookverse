@@ -158,7 +158,7 @@ button {
 
 .update:hover {
   cursor: pointer;
-  background-color: #019c11;
+  background-color: var(--x-dark-green);
 }
 
 .background {

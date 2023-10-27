@@ -1,7 +1,7 @@
 <template>
   Hello, {{ user.displayName }} 👋
   <Spinner v-if="!error && !offers.size" />
-  <Notification v-else :route="route" :window="getWindow()" />
+  <NotificationAfterRedirection v-else :route="route" :window="getWindow()" />
   <section class="offers">
     <h1>My offers</h1>
     <p v-if="error">You haven't made any offers yet.</p>
@@ -15,7 +15,7 @@
 <script>
 import { onMounted, ref } from 'vue'
 
-import Notification from '@/components/Notification.vue'
+import NotificationAfterRedirection from '@/components/NotificationAfterRedirection.vue'
 import Offer from '@/components/Offer.vue'
 import Spinner from '@/components/Spinner.vue'
 
@@ -24,7 +24,7 @@ import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
-  components: { Notification, Offer, Spinner },
+  components: { NotificationAfterRedirection, Offer, Spinner },
   setup(props) {
     const { user } = getUser()
 
