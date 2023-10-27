@@ -19,7 +19,7 @@
         </form>
         <p class="error" v-if="phoneError">{{ phoneError }}</p>
         <span>
-          <input type="checkbox" class="checkbox" :v-model="saveDeliveryDetails">
+          <input type="checkbox" class="checkbox" v-model="saveDeliveryDetails">
           <label>Save delivery details to my account.</label>
         </span>
       </section>
@@ -84,11 +84,18 @@ export default {
       
       if (!agreedTermsOfService.value) {
         agreedTermsOfServiceError.value = 'You must agree to the terms of service'
+        return
       }
 
       const createOrder = httpsCallable(functions, 'createOrder')
       try {
-        await createOrder({ items: orders.value, name: name.value, phone: phone.value, address: address.value })
+        await createOrder({
+          items: orders.value,
+          name: name.value,
+          phone: phone.value,
+          address: address.value,
+          saveDeliveryDetails: saveDeliveryDetails.value 
+        })
         shoppingCart.empty()
         redirectToPageWithMessage(router, 'profile', 'Ordered placed successfully.', 'success')
       } catch (err) {

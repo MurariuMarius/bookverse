@@ -53,4 +53,10 @@ exports.createOrder = onCall(async (request) => {
       .doc(item.offerID)
       .update({ 'status': 'sold', 'buyerID': order.buyerID })
   }))
+
+  if (request.data.saveDeliveryDetails) {
+    firestoreService.collection('users')
+      .doc(request.auth.uid)
+      .update({ 'name': order.name, 'phone': order.phone, 'address': order.address })
+  }
 })
