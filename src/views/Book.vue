@@ -1,5 +1,5 @@
 <template>
-  <Notification v-if="showNotification" message="Item added to cart." type="success" />
+  <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType" />
   <div class="book" v-if="book">
     <div class="headSection">
       <div class="bookDetails">
@@ -31,6 +31,7 @@ import Spinner from '@/components/Spinner.vue'
 import useGetOffersForBook from '@/composables/useGetOffersForBook'
 import useGetDocByID from '@/composables/useGetDocByID'
 import useGetBookIcon from '@/composables/useGetBookIcon'
+import useNotification from '@/composables/useNotification'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 
@@ -42,7 +43,7 @@ export default {
     const offers = ref(null)
     const pageLoaded = ref(false)
 
-    const showNotification = ref(false)
+    const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
     const authors = computed(() => {
       return book.value.authors.join(', ')
@@ -72,11 +73,11 @@ export default {
     const addItemToShoppingCart = (offer) => {
       shoppingCart.addOrder({ book, offer })
       console.log(shoppingCart.getOrderCount)
-      showNotification.value = true
-      setTimeout(() => showNotification.value = false, 2000)
+      toggleNotification('Item added to cart.', 'success', 2000)
     }
     
-    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, showNotification, imageLoad, addItemToShoppingCart }
+    return { authors, book, offersSortedByPrice, imageSource, pageLoaded, showNotification, notificationMessage,
+      notificationType, imageLoad, addItemToShoppingCart }
   }
 }
 </script>
