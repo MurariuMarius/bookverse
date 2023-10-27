@@ -31,7 +31,7 @@ exports.createOrder = onCall(async (request) => {
     request.data.items.map(order => {
       items.push({
         ISBN: order.book.ISBN,
-        offer: order.offer.id
+        offerID: order.offer.id
       })
     })
 
@@ -47,4 +47,10 @@ exports.createOrder = onCall(async (request) => {
 
   const order = parseCreateOrderRequest(request)
   await firestoreService.collection('orders').add(order)
+
+  await Promise.all(order.items.map(async (item) => {
+    firestoreService.collection('offers')
+      .doc(item.offerID)
+      .update({ 'status': 'sold', 'buyerID': order.buyerID })
+  }))
 })
