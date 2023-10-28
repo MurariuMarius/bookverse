@@ -8,7 +8,7 @@
     <input type="email" placeholder="New email" required v-model="newEmail">
     <button>Reset email</button>
   </form>
-  <button @click="">Reset password</button>
+  <button @click="handleResetPassword">Reset password</button>
   <button @click="handleDeleteUser">Delete user</button>
 </section>
 <section class="order">
@@ -48,6 +48,7 @@ import useGetDocByID from '@/composables/useGetDocByID'
 import useManageOffer from '@/composables/useManageOffer'
 import useNotification from '@/composables/useNotification'
 import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
+import sendUserPasswordResetEmail from '@/composables/sendUserPasswordResetEmail'
 
 import Notification from '@/components/Notification.vue'
 
@@ -83,6 +84,15 @@ export default {
       try {
         deleteUser({ uid: userID.value })
         toggleNotification('User deleted.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
+
+    const handleResetPassword = () => {
+      try {
+        sendUserPasswordResetEmail(userID.value)
+        toggleNotification('Password reset email sent.', 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
       }
@@ -129,7 +139,7 @@ export default {
     }
 
     return {
-      userID, newEmail, handleResetEmail, handleDeleteUser, 
+      userID, newEmail, handleResetEmail, handleDeleteUser, handleResetPassword,
       orderID, orderItems, name, phone, address, showNotification, handleRemoveItems, handleChangeDeliveryDetails, handleDeleteOrder,
       notificationMessage, notificationType,
       offerID, offerPrice, bookCondition, handleUpdateOffer
