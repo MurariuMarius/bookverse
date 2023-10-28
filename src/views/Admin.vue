@@ -130,7 +130,7 @@ export default {
 
     const handleChangeDeliveryDetails = async () => {
       try {
-        await changeDeliveryDetails('orders', orderID.value)
+        await changeDeliveryDetails('orders', orderID.value, 'buyerID')
         toggleNotification('Updated delivery details.', 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)

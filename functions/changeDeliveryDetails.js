@@ -1,6 +1,5 @@
 const { HttpsError, onCall } = require('firebase-functions/v2/https')
 const { firestoreService, authorizeOperation } = require('./admin')
-const { logger } = require('firebase-functions/v2')
 
 exports.changeDeliveryDetails = onCall(async (request) => {
   const validateChangeDeliveryRequest = (requestData) => {
@@ -16,7 +15,11 @@ exports.changeDeliveryDetails = onCall(async (request) => {
     }
   }
 
-  await authorizeOperation(request.auth.uid, async () => { return request.data.id })
+  const data = (await firestoreService
+    .collection(request.data.collection)
+    .doc(request.data.id).get()).data()
+
+  await authorizeOperation(request.auth.uid, async () => { return Reflect.get(data, request.data.ownerIDField) })
 
   validateChangeDeliveryRequest(request.data)
 

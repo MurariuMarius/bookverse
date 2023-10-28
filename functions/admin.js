@@ -3,7 +3,7 @@ const { getFirestore } = require('firebase-admin/firestore')
 const { getStorage } = require('firebase-admin/storage')
 const { HttpsError } = require('firebase-functions/v2/https')
 
-const ADMINS = ['ObBkUOx8KgMtNUrU0oy5ohOdOfz1']
+const ADMINS = ['WQCSuK5jvtcJWHbvyk2WdBM7Pqv1']
 
 const app = initializeApp()
 

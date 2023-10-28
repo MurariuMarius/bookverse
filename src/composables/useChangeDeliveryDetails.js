@@ -15,7 +15,7 @@ const initializeFields = (order) => {
   address.value = order.address
 }
 
-const changeDeliveryDetails = async (collection, id) => {
+const changeDeliveryDetails = async (collection, id, ownerIDField) => {
   const isValidPhone = () => {
     if (!/^[\+0][0-9]{6,15}$/.test(phone.value)) {
       phoneError.value = 'Invalid phone number'
@@ -31,7 +31,7 @@ const changeDeliveryDetails = async (collection, id) => {
 
   const changeDeliveryDetailsCloud = httpsCallable(functions, 'changeDeliveryDetails')
 
-  await changeDeliveryDetailsCloud({collection, id, name: name.value, address: address.value, phone: phone.value})
+  await changeDeliveryDetailsCloud({collection, id, name: name.value, address: address.value, phone: phone.value, ownerIDField})
 }
 
 const useChangeDeliveryDetails = () => {
