@@ -3,8 +3,8 @@
 <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType"/>
 <section class="user">
   <h2>Reset user email / password</h2>
-  <form @submit.prevent="">
-    <input type="text" placeholder="User ID" required v-model="userID">
+  <input type="text" placeholder="User ID" required v-model="userID">
+  <form @submit.prevent="handleResetEmail">
     <input type="email" placeholder="New email" required v-model="newEmail">
     <button>Reset email</button>
   </form>
@@ -59,11 +59,23 @@ export default {
 
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
+    const userID = ref('')
+    const newEmail = ref('')
     const orderID = ref('')
     const orderItems = ref('')
     const offerID = ref('')
 
     const functions = getFunctions()
+
+    const handleResetEmail = () => {
+      const resetEmail = httpsCallable(functions, 'manageUser-resetEmail')
+      try {
+        resetEmail({ uid: userID.value, email: newEmail.value })
+        toggleNotification(`Email set to ${newEmail.value}.`, 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
 
     const handleUpdateOffer = async () => {
       const offer = await getDocByID('offers', offerID.value)
@@ -77,7 +89,12 @@ export default {
 
     const handleRemoveItems = async () => {
       const removeItems = httpsCallable(functions, 'manageOrder-removeItems')
-      await removeItems({ orderID: orderID.value, offerIDs: orderItems.value })
+      try {
+        await removeItems({ orderID: orderID.value, offerIDs: orderItems.value })
+        toggleNotification('Successfully removed items.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
     }
 
     const handleChangeDeliveryDetails = async () => {
@@ -101,6 +118,7 @@ export default {
     }
 
     return {
+      userID, newEmail, handleResetEmail,
       orderID, orderItems, name, phone, address, showNotification, handleRemoveItems, handleChangeDeliveryDetails, handleDeleteOrder,
       notificationMessage, notificationType,
       offerID, offerPrice, bookCondition, handleUpdateOffer
