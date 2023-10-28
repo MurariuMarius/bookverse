@@ -9,6 +9,7 @@
     <button>Reset email</button>
   </form>
   <button @click="">Reset password</button>
+  <button @click="handleDeleteUser">Delete user</button>
 </section>
 <section class="order">
   <h2>Manage orders</h2>
@@ -77,6 +78,16 @@ export default {
       }
     }
 
+    const handleDeleteUser = () => {
+      const deleteUser = httpsCallable(functions, 'manageUser-deleteUser')
+      try {
+        deleteUser({ uid: userID.value })
+        toggleNotification('User deleted.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
+
     const handleUpdateOffer = async () => {
       const offer = await getDocByID('offers', offerID.value)
       try {
@@ -118,7 +129,7 @@ export default {
     }
 
     return {
-      userID, newEmail, handleResetEmail,
+      userID, newEmail, handleResetEmail, handleDeleteUser, 
       orderID, orderItems, name, phone, address, showNotification, handleRemoveItems, handleChangeDeliveryDetails, handleDeleteOrder,
       notificationMessage, notificationType,
       offerID, offerPrice, bookCondition, handleUpdateOffer

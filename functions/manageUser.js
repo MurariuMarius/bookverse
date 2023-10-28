@@ -17,3 +17,10 @@ exports.resetEmail = onCall(async (request) => {
 
   await firestoreService.collection('users').doc(request.data.uid).update({ 'email': request.data.email })
 })
+
+exports.deleteUser = onCall(async (request) => {
+  await getAuth()
+    .deleteUser(request.data.uid)
+
+  await firestoreService.collection('users').doc(request.data.uid).delete()
+})
