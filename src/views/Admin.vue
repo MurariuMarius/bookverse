@@ -36,7 +36,7 @@
     <input type="text" placeholder="Book condition" required v-model="bookCondition">
     <button>Edit offer</button>
   </form>
-  <button>Delete offer</button>
+  <button @click="handleDeleteOffer">Delete offer</button>
 </section>
 </template>
 
@@ -69,29 +69,29 @@ export default {
 
     const functions = getFunctions()
 
-    const handleResetEmail = () => {
+    const handleResetEmail = async () => {
       const resetEmail = httpsCallable(functions, 'manageUser-resetEmail')
       try {
-        resetEmail({ uid: userID.value, email: newEmail.value })
+        await resetEmail({ uid: userID.value, email: newEmail.value })
         toggleNotification(`Email set to ${newEmail.value}.`, 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
       }
     }
 
-    const handleDeleteUser = () => {
+    const handleDeleteUser = async () => {
       const deleteUser = httpsCallable(functions, 'manageUser-deleteUser')
       try {
-        deleteUser({ uid: userID.value })
+        await deleteUser({ uid: userID.value })
         toggleNotification('User deleted.', 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
       }
     }
 
-    const handleResetPassword = () => {
+    const handleResetPassword = async () => {
       try {
-        sendUserPasswordResetEmail(userID.value)
+        await sendUserPasswordResetEmail(userID.value)
         toggleNotification('Password reset email sent.', 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
@@ -101,10 +101,20 @@ export default {
     const handleUpdateOffer = async () => {
       const offer = await getDocByID('offers', offerID.value)
       try {
-        updateOffer({ ...offer, id: offerID.value })
+        await updateOffer({ ...offer, id: offerID.value })
         toggleNotification('Offer updated.', 'success', 2000)
       } catch (err) {
-        console.log(err, err.message)
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
+    
+    const handleDeleteOffer = async () => {
+      const offer = await getDocByID('offers', offerID.value)
+      try {
+        await deleteOffer({ ...offer, id: offerID.value })
+        toggleNotification('Offer deleted.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
       }
     }
 
@@ -142,7 +152,7 @@ export default {
       userID, newEmail, handleResetEmail, handleDeleteUser, handleResetPassword,
       orderID, orderItems, name, phone, address, showNotification, handleRemoveItems, handleChangeDeliveryDetails, handleDeleteOrder,
       notificationMessage, notificationType,
-      offerID, offerPrice, bookCondition, handleUpdateOffer
+      offerID, offerPrice, bookCondition, handleUpdateOffer, handleDeleteOffer
     }
   }
 }

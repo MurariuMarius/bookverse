@@ -1,8 +1,6 @@
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { ref } from 'vue'
 
-import { firestoreService } from '@/firebase/config'
-
 const bookCondition = ref('')
 const price = ref('')
 const priceError = ref('')
@@ -23,7 +21,8 @@ const updateOffer = async (offer) => {
 }
 
 const deleteOffer = async (offer) => {
-  await firestoreService.collection('offers').doc(offer.id).delete()
+  const deleteOfferCloud = httpsCallable(functions, 'deleteOffer')
+  await deleteOfferCloud({ offer })
 }
 
 const useManageOffer = () => {
