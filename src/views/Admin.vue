@@ -25,7 +25,7 @@
     <input type="text" placeholder="Address" required v-model="address">
     <button>Change</button>
   </form>
-  <button>Remove order</button>
+  <button @click="handleDeleteOrder">Remove order</button>
 </section>
 <section class="offer">
   <h2>Manage offers</h2>
@@ -41,6 +41,7 @@
 
 <script>
 import { ref } from 'vue'
+import { getFunctions, httpsCallable } from 'firebase/functions' 
 
 import useGetDocByID from '@/composables/useGetDocByID'
 import useManageOffer from '@/composables/useManageOffer'
@@ -48,6 +49,7 @@ import useNotification from '@/composables/useNotification'
 import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
 
 import Notification from '@/components/Notification.vue'
+import { firestoreService } from '@/firebase/config'
 
 export default {
   components: { Notification },
@@ -61,6 +63,8 @@ export default {
     const orderID = ref('')
     const offerID = ref('')
 
+    const functions = getFunctions()
+
     const handleUpdateOffer = async () => {
       const offer = await getDocByID('offers', offerID.value)
       try {
@@ -71,16 +75,31 @@ export default {
       }
     }
 
-    const handleChangeDeliveryDetails = () => {
+    const handleChangeDeliveryDetails = async () => {
       try {
-        changeDeliveryDetails('orders', orderID.value)
+        await changeDeliveryDetails('orders', orderID.value)
         toggleNotification('Updated delivery details.', 'success', 2000)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
       }
     }
 
-    return { orderID, name, phone, address, showNotification, notificationMessage, notificationType, offerID, offerPrice, bookCondition, handleUpdateOffer, handleChangeDeliveryDetails }
+    const handleDeleteOrder = async () => {
+      console.log(orderID.value)
+      const deleteOrder = httpsCallable(functions, 'manageOrder-deleteOrder')
+      try {
+        await deleteOrder({ orderID: orderID.value })
+        toggleNotification('Order deleted.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
+
+    return {
+      orderID, name, phone, address, showNotification, handleUpdateOffer, handleChangeDeliveryDetails, handleDeleteOrder,
+      notificationMessage, notificationType,
+      offerID, offerPrice, bookCondition,
+    }
   }
 }
 </script>
