@@ -1,5 +1,6 @@
 <template>
 <h1>Admin</h1>
+<Notification v-if="showNotification" :message="notificationMessage" :type="notificationType"/>
 <section class="user">
   <h2>Reset user email / password</h2>
   <form @submit.prevent="">
@@ -27,7 +28,7 @@
 </section>
 <section class="offer">
   <h2>Manage offers</h2>
-  <form @submit.prevent="">
+  <form @submit.prevent="handleUpdateOffer">
     <input type="text" placeholder="Offer ID" required v-model="offerID">
     <input type="text" placeholder="Price" required v-model="offerPrice">
     <input type="text" placeholder="Book condition" required v-model="bookCondition">
@@ -38,8 +39,36 @@
 </template>
 
 <script>
-export default {
+import { ref } from 'vue'
 
+import useGetDocByID from '@/composables/useGetDocByID'
+import useManageOffer from '@/composables/useManageOffer'
+import useNotification from '@/composables/useNotification'
+
+import Notification from '@/components/Notification.vue'
+
+export default {
+  components: { Notification },
+  setup() {
+    const { bookCondition, price: offerPrice, updateOffer, deleteOffer } = useManageOffer()
+    const { error: offerIDError, getDocByID } = useGetDocByID()
+
+    const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
+
+    const offerID = ref('')
+
+    const handleUpdateOffer = async () => {
+      const offer = await getDocByID('offers', offerID.value)
+      try {
+        updateOffer({ ...offer, id: offerID.value })
+        toggleNotification('Offer updated.', 'success', 2000)
+      } catch (err) {
+        console.log(err, err.message)
+      }
+    }
+
+    return { showNotification, notificationMessage, notificationType, offerID, offerPrice, bookCondition, handleUpdateOffer }
+  }
 }
 </script>
 
