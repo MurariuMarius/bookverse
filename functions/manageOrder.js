@@ -1,11 +1,24 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
-const { firestoreService } = require('./admin')
+const { firestoreService, authorizeOperation } = require('./admin')
 const { getDocByID } = require('./getDocByID')
 const { logger } = require('firebase-functions/v2')
+const { Timestamp } = require('firebase-admin/firestore')
 
+const timeAfterPlacementAllowingOrderModifications = 300000 // ns
+
+const getOwnerID = (order) => {
+  const now = Timestamp.now()
+  const ownerID = now.seconds - order.createdAt.seconds < timeAfterPlacementAllowingOrderModifications ? order.buyerID : null
+  logger.log(ownerID)
+  return async () => { return ownerID }
+}
 
 exports.deleteOrder = onCall(async (request) => {
+
   const order = await getDocByID('orders', request.data.orderID)
+
+  await authorizeOperation(request.auth.uid, getOwnerID(order))
+  
   Promise.all(order.items.map(async (item) => {
     await firestoreService.collection('offers').doc(item.offerID).update({ buyerID: null, status: 'available' })
   }))
@@ -30,6 +43,8 @@ exports.removeItems = onCall(async (request) => {
   const amountsToBeDeducted = []
 
   const order = await getDocByID('orders', orderID)
+
+  await authorizeOperation(request.auth.uid, getOwnerID(order))
 
   await Promise.all(offerIDs.map(async (offerID) => {
     try {

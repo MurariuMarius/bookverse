@@ -1,5 +1,5 @@
 const { HttpsError, onCall } = require('firebase-functions/v2/https')
-const { firestoreService } = require('./admin')
+const { firestoreService, authorizeOperation } = require('./admin')
 const { logger } = require('firebase-functions/v2')
 
 exports.changeDeliveryDetails = onCall(async (request) => {
@@ -15,6 +15,8 @@ exports.changeDeliveryDetails = onCall(async (request) => {
       throw new HttpsError('invalid-argument', 'Fields must not be empty.')
     }
   }
+
+  await authorizeOperation(request.auth.uid, async () => { return request.data.id })
 
   validateChangeDeliveryRequest(request.data)
 
