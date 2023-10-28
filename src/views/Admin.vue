@@ -15,8 +15,8 @@
   <input type="text" placeholder="Order ID" required v-model="orderID">
   <h3>Remove item</h3>
   <form @submit.prevent="">
-    <input type="text" placeholder="Offer ID" required v-model="orderItem">
-    <button>Remove item</button>
+    <input type="text" placeholder="Offer IDs" required v-model="orderItems">
+    <button @click="handleRemoveItems">Remove item</button>
   </form>
   <h3>Change delivery details</h3>
   <form @submit.prevent="handleChangeDeliveryDetails">
@@ -49,7 +49,6 @@ import useNotification from '@/composables/useNotification'
 import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
 
 import Notification from '@/components/Notification.vue'
-import { firestoreService } from '@/firebase/config'
 
 export default {
   components: { Notification },
@@ -61,6 +60,7 @@ export default {
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
     const orderID = ref('')
+    const orderItems = ref('')
     const offerID = ref('')
 
     const functions = getFunctions()
@@ -73,6 +73,11 @@ export default {
       } catch (err) {
         console.log(err, err.message)
       }
+    }
+
+    const handleRemoveItems = async () => {
+      const removeItems = httpsCallable(functions, 'manageOrder-removeItems')
+      await removeItems({ orderID: orderID.value, offerIDs: orderItems.value })
     }
 
     const handleChangeDeliveryDetails = async () => {
@@ -96,9 +101,9 @@ export default {
     }
 
     return {
-      orderID, name, phone, address, showNotification, handleUpdateOffer, handleChangeDeliveryDetails, handleDeleteOrder,
+      orderID, orderItems, name, phone, address, showNotification, handleRemoveItems, handleChangeDeliveryDetails, handleDeleteOrder,
       notificationMessage, notificationType,
-      offerID, offerPrice, bookCondition,
+      offerID, offerPrice, bookCondition, handleUpdateOffer
     }
   }
 }
