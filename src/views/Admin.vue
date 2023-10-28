@@ -12,17 +12,18 @@
 </section>
 <section class="order">
   <h2>Manage orders</h2>
-  <input type="text" placeholder="Order ID" required v-model="order">
+  <input type="text" placeholder="Order ID" required v-model="orderID">
   <h3>Remove item</h3>
   <form @submit.prevent="">
     <input type="text" placeholder="Offer ID" required v-model="orderItem">
     <button>Remove item</button>
   </form>
   <h3>Change delivery details</h3>
-  <form @submit.prevent="">
+  <form @submit.prevent="handleChangeDeliveryDetails">
     <input type="text" placeholder="Full name" required v-model="name">
     <input type="text" placeholder="Phone number" required v-model="phone">
     <input type="text" placeholder="Address" required v-model="address">
+    <button>Change</button>
   </form>
   <button>Remove order</button>
 </section>
@@ -44,6 +45,7 @@ import { ref } from 'vue'
 import useGetDocByID from '@/composables/useGetDocByID'
 import useManageOffer from '@/composables/useManageOffer'
 import useNotification from '@/composables/useNotification'
+import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
 
 import Notification from '@/components/Notification.vue'
 
@@ -52,9 +54,11 @@ export default {
   setup() {
     const { bookCondition, price: offerPrice, updateOffer, deleteOffer } = useManageOffer()
     const { error: offerIDError, getDocByID } = useGetDocByID()
+    const { name, phone, address, changeDeliveryDetails } = useChangeDeliveryDetails()
 
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
+    const orderID = ref('')
     const offerID = ref('')
 
     const handleUpdateOffer = async () => {
@@ -67,7 +71,16 @@ export default {
       }
     }
 
-    return { showNotification, notificationMessage, notificationType, offerID, offerPrice, bookCondition, handleUpdateOffer }
+    const handleChangeDeliveryDetails = () => {
+      try {
+        changeDeliveryDetails('orders', orderID.value)
+        toggleNotification('Updated delivery details.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+      }
+    }
+
+    return { orderID, name, phone, address, showNotification, notificationMessage, notificationType, offerID, offerPrice, bookCondition, handleUpdateOffer, handleChangeDeliveryDetails }
   }
 }
 </script>
