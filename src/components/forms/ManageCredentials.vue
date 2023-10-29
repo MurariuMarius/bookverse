@@ -70,6 +70,8 @@ export default {
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
       }
+
+      passwordEmail.value = email.value = ''
     }
 
     const handleResetPassword = async () => {
@@ -79,7 +81,7 @@ export default {
       }
 
       try {
-        await reauthenticateUser(passwordEmail.value)
+        await reauthenticateUser(password.value)
       } catch (err) {
         toggleNotification(err.message, 'error', 2000)
         return
@@ -92,6 +94,8 @@ export default {
         error.value = err.message
         toggleNotification(err.message, 'error', 2000)
       }
+
+      password.value = newPassword.value = newPasswordAgain.value = ''
     }
 
     const handleDeleteAccount = async () => {
@@ -109,6 +113,8 @@ export default {
       } catch (err) {
         toggleNotification(err.message, 'err', 2000)
       }
+
+      passwordDeleteAccount.value = ''
     }
 
     return {

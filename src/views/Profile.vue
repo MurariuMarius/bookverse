@@ -6,8 +6,8 @@
     <h1>Hello, {{ user.displayName }} 👋</h1>
   </section>
   <section class="credentials">
-    <h1>Manage credentials</h1>
-    <ManageCredentials />
+    <h1 @click="toggleManageCredentials">Manage credentials</h1>
+    <ManageCredentials v-if="showManageCredentials"/>
   </section>
   <section class="user">
     <h1 @click="toggleDeliveryDetails">Delivery details</h1>
@@ -73,6 +73,7 @@ export default {
     const offers = ref(new Map())
     const orders = ref(new Map())
     
+    const showManageCredentials = ref(false)
     const showDeliveryDetails = ref(false)
     const showOrders = ref(true)
     const showOffers = ref(true)
@@ -94,6 +95,10 @@ export default {
       address.value = details.address
       phone.value = details.phone
       phoneError.value = details.phoneError
+    }
+
+    const toggleManageCredentials = () => {
+      showManageCredentials.value = !showManageCredentials.value
     }
 
     const toggleDeliveryDetails = () => {
@@ -126,7 +131,7 @@ export default {
       ordersLoaded.value = true
     }
 
-    return { showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers }
+    return { showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials }
   }
 }
 </script>
