@@ -13,11 +13,15 @@
     <button>Reset password</button>
   </form>
   <p class="error">{{ error }}</p>
+  <h2>Delete account</h2>
+  <input type="password" placeholder="Password" required v-model="passwordDeleteAccount">
+  <button @click="handleDeleteAccount">Delete account</button>
 </template>
 
 <script>
-import { EmailAuthProvider, getAuth, reauthenticateWithCredential, updateEmail, updatePassword } from 'firebase/auth'
+import { EmailAuthProvider, getAuth, reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import useNotification from '@/composables/utils/useNotification'
 import { getFunctions, httpsCallable } from 'firebase/functions'
@@ -30,9 +34,12 @@ export default {
 
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
+    const router = useRouter()
+
     const email = ref('')
     const password = ref('')
     const passwordEmail = ref('')
+    const passwordDeleteAccount = ref('')
     const newPassword = ref('')
     const newPasswordAgain = ref('')
     const error = ref('')
@@ -87,7 +94,28 @@ export default {
       }
     }
 
-    return { email, password, passwordEmail, newPassword, newPasswordAgain, error, showNotification, notificationMessage, notificationType, handleResetEmail, handleResetPassword }
+    const handleDeleteAccount = async () => {
+      try {
+        await reauthenticateUser(passwordDeleteAccount.value)
+      } catch (err) {
+        toggleNotification(err.message, 'error', 2000)
+        return
+      }
+
+      const deleteAccount = httpsCallable(functions, 'manageUser-deleteUser')
+      try {
+        await deleteAccount({ uid: auth.currentUser.uid })
+        toggleNotification('Account deleted.', 'success', 2000)
+      } catch (err) {
+        toggleNotification(err.message, 'err', 2000)
+      }
+    }
+
+    return {
+      email, password, passwordDeleteAccount, passwordEmail, newPassword, newPasswordAgain, error,
+      showNotification, notificationMessage, notificationType,
+      handleResetEmail, handleResetPassword, handleDeleteAccount
+    }
   }
 }
 </script>
