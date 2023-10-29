@@ -1,15 +1,13 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { firestoreService, authorizeOperation } = require('./admin')
 const { getDocByID } = require('./getDocByID')
-const { logger } = require('firebase-functions/v2')
 const { Timestamp } = require('firebase-admin/firestore')
 
-const timeAfterPlacementAllowingOrderModifications = 300000 // ns
+const secondsAfterPlacementAllowingOrderModifications = 60
 
 const getOwnerID = (order) => {
   const now = Timestamp.now()
-  const ownerID = now.seconds - order.createdAt.seconds < timeAfterPlacementAllowingOrderModifications ? order.buyerID : null
-  logger.log(ownerID)
+  const ownerID = now.seconds - order.createdAt.seconds < secondsAfterPlacementAllowingOrderModifications ? order.buyerID : null
   return async () => { return ownerID }
 }
 
