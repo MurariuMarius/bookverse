@@ -1,13 +1,20 @@
 <template>
   Hello, {{ user.displayName }} 👋
-  <Spinner v-if="!error && !offers.size" />
+  <Spinner v-if="(!error && !offers.size) || !ordersLoaded" />
   <NotificationAfterRedirection v-else :route="route" :window="getWindow()" />
   <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType" />
   <section class="user">
     <h1 @click="toggleDeliveryDetails">Delivery details</h1>
     <div v-if="showDeliveryDetails">
-      <DeliveryDetails  @sentData="getDeliveryDetails"/>
+      <DeliveryDetails  @sentData="getDeliveryDetails" />
       <button @click="handleChangeDeliveryDetails">Change</button>
+    </div>
+  </section>
+  <section class="orders">
+    <h1>My orders</h1>
+    <p>You haven't placed any orders yet.</p>
+    <div v-if="orders">
+      <Order v-for="[order, orderItems] in orders" :key="order" :order="order" :orderItems="orderItems" @loaded="pageLoaded" />
     </div>
   </section>
   <section class="offers">
@@ -27,33 +34,44 @@ import DeliveryDetails from '@/components/DeliveryDetails.vue'
 import NotificationAfterRedirection from '@/components/NotificationAfterRedirection.vue'
 import Notification from '@/components/Notification.vue'
 import Offer from '@/components/Offer.vue'
+import Order from '@/components/Order.vue'
 import Spinner from '@/components/Spinner.vue'
 
 import { useRoute } from 'vue-router'
 
 import getUser from '@/composables/getUser'
 import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
+import useGetOrdersForUserByID from '@/composables/useGetOrdersForUserByID'
 import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
 import useNotification from '@/composables/useNotification'
+import { firestoreService } from '@/firebase/config'
 
 export default {
-  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Spinner },
+  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner },
   setup(props) {
     const { user } = getUser()
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
     const { error, getOffersForUserByID } = useGetOffersForUserByID()
+    const { getOrdersForUserByID } = useGetOrdersForUserByID()
 
     const route = useRoute()
 
+    const ordersLoaded = ref(false)
+
+
     const offers = ref(new Map())
+    const orders = ref(new Map())
     
     const showDeliveryDetails = ref(false)
 
     onMounted(async () => {
       offers.value = await getOffersForUserByID(user.value.uid, 'seller')
       offers.value = new Map([...offers.value].sort((a, b) => a[0].createdAt.seconds < b[0].createdAt.seconds ? 1 : -1))
+
+      orders.value = await getOrdersForUserByID(user.value.uid)
+      console.log(orders.value);
     })
 
     const getWindow = () => {
@@ -85,7 +103,11 @@ export default {
       }
     } 
 
-    return { offers, error, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails }
+    const pageLoaded = () => {
+      ordersLoaded.value = true
+    }
+
+    return { pageLoaded, ordersLoaded, orders, offers, error, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails }
   }
 }
 </script>

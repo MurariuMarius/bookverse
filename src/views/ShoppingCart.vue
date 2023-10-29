@@ -4,7 +4,7 @@
     <p v-if="!orders.length">No books added.</p>
     <div v-else class="orders">
       <p>Click on an item to remove it.</p>
-      <Order v-for="order in orders" :key="order" :order="order" />
+      <OrderItem v-for="order in orders" :key="order" :order="order" @orderClicked="removeOrder" />
       <h2>Total: {{ total }} €</h2>
       <button @click="goToCheckout">Proceed to checkout</button>
     </div>
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import Order from '@/components/Order.vue'
+import OrderItem from '@/components/OrderItem.vue'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default {
-  components: { Order },
+  components: { OrderItem },
   setup() {
     const orders = computed(() => shoppingCart.getOrders())
     const total = computed(() => {
@@ -35,7 +35,12 @@ export default {
       router.push('checkout')
     }
 
-    return { orders, total, goToCheckout }
+    const removeOrder = (e) => {
+      console.log(e);
+      shoppingCart.removeOrder(e)
+    }
+
+    return { orders, total, goToCheckout, removeOrder }
   }
 }
 </script>
