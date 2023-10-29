@@ -19,7 +19,7 @@ const getOrdersForUserByID = async (id) => {
           getDocByID('books', item.ISBN),
           getDocByID('offers', item.offerID)
         ])
-        orderMap.get(order).push({ book, offer })
+        orderMap.get(order).push({ book, offer: { ...offer, id: item.offerID }})
       }))
     })
   )

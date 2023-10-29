@@ -14,7 +14,6 @@
 </template>
   
 <script>
-import { shoppingCart } from '@/composables/shoppingCart';
 import useGetBookIcon from '@/composables/useGetBookIcon'
 import { computed } from 'vue'
 

@@ -13,7 +13,7 @@
   <section class="orders">
     <h1>My orders</h1>
     <p>You haven't placed any orders yet.</p>
-    <div v-if="orders">
+    <div v-if="orders" class="orderList">
       <Order v-for="[order, orderItems] in orders" :key="order" :order="order" :orderItems="orderItems" @loaded="pageLoaded" />
     </div>
   </section>
@@ -112,7 +112,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .offers {
   margin: auto;
   max-width: 1300px;
@@ -123,4 +123,14 @@ export default {
   text-decoration: underline;
 }
 
+.orders {
+  max-width: 1300px;
+}
+
+.orderList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 25px;
+}
 </style>
