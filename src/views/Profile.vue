@@ -5,6 +5,10 @@
   <section class="welcome">
     <h1>Hello, {{ user.displayName }} 👋</h1>
   </section>
+  <section class="credentials">
+    <h1>Manage credentials</h1>
+    <ManageCredentials />
+  </section>
   <section class="user">
     <h1 @click="toggleDeliveryDetails">Delivery details</h1>
     <div v-if="showDeliveryDetails">
@@ -38,6 +42,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import ManageCredentials from '@/components/forms/ManageCredentials.vue'
 import NotificationAfterRedirection from '@/components/utils/NotificationAfterRedirection.vue'
 import Notification from '@/components/utils/Notification.vue'
 import Offer from '@/components/offer/Offer.vue'
@@ -51,7 +56,7 @@ import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDe
 import useNotification from '@/composables/utils/useNotification'
 
 export default {
-  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner },
+  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner, ManageCredentials },
   setup(props) {
     const { user } = getUser()
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
