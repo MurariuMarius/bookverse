@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import useGetBookIcon from '@/composables/useGetBookIcon'
+import useGetBookIcon from '@/composables/utils/useGetBookIcon'
 import { computed, ref } from 'vue'
 
-import ManageOffer from './ManageOffer.vue'
+import ManageOffer from '@/components/offer/ManageOffer.vue'
 
 export default {
   emits: ['success'],

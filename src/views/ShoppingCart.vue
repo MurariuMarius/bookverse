@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import OrderItem from '@/components/OrderItem.vue'
+import OrderItem from '@/components/order/OrderItem.vue'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import { computed, ref } from 'vue'

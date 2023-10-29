@@ -14,7 +14,7 @@
 </template>
   
 <script>
-import useGetBookIcon from '@/composables/useGetBookIcon'
+import useGetBookIcon from '@/composables/utils/useGetBookIcon'
 import { computed } from 'vue'
 
 export default {

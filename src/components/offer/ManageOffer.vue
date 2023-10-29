@@ -24,8 +24,8 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
 
-import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
-import useManageOffer from '@/composables/useManageOffer'
+import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
+import useManageOffer from '@/composables/services/useManageOffer'
 
 export default {
   emits: [ 'close' ],

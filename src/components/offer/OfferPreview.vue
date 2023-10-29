@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import getUser from '@/composables/getUser';
+import getUser from '@/composables/auth/getUser'
 
 export default {
   props: { offer: Object },

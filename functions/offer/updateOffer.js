@@ -1,8 +1,8 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { logger } = require('firebase-functions/v2')
 
-const { firestoreService, authorizeOperation } = require('./admin')
-const { getDocByID } = require('./getDocByID')
+const { firestoreService, authorizeOperation } = require('../admin')
+const { getDocByID } = require('../getDocByID')
 
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 

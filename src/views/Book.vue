@@ -23,15 +23,15 @@
 <script>
 import { computed, onMounted, ref } from 'vue'
 
-import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
-import Notification from '@/components/Notification.vue'
-import OfferPreview from '@/components/OfferPreview.vue'
-import Spinner from '@/components/Spinner.vue'
+import BookConditionsDescription from '@/components/book/BookConditionsDescription.vue'
+import Notification from '@/components/utils/Notification.vue'
+import OfferPreview from '@/components/offer/OfferPreview.vue'
+import Spinner from '@/components/utils/Spinner.vue'
 
-import useGetOffersForBook from '@/composables/useGetOffersForBook'
-import useGetDocByID from '@/composables/useGetDocByID'
-import useGetBookIcon from '@/composables/useGetBookIcon'
-import useNotification from '@/composables/useNotification'
+import useGetOffersForBook from '@/composables/services/useGetOffersForBook'
+import useGetDocByID from '@/composables/utils/useGetDocByID'
+import useGetBookIcon from '@/composables/utils/useGetBookIcon'
+import useNotification from '@/composables/utils/useNotification'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 

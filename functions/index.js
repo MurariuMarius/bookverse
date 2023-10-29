@@ -1,7 +1,7 @@
-exports.createOffer = require('./createOffer').createOffer
-exports.updateOffer = require('./updateOffer').updateOffer
-exports.deleteOffer = require('./deleteOffer').deleteOffer
-exports.createOrder = require('./createOrder').createOrder
+exports.createOffer = require('./offer/createOffer').createOffer
+exports.updateOffer = require('./offer/updateOffer').updateOffer
+exports.deleteOffer = require('./offer/deleteOffer').deleteOffer
+exports.createOrder = require('./order/createOrder').createOrder
 exports.changeDeliveryDetails = require('./changeDeliveryDetails').changeDeliveryDetails
-exports.manageOrder = require('./manageOrder')
+exports.manageOrder = require('./order/manageOrder')
 exports.manageUser = require('./manageUser')

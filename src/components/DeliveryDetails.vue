@@ -9,8 +9,8 @@
 
 <script>
 import { onMounted, ref } from 'vue'
-import getUser from '@/composables/getUser'
 import { firestoreService } from '@/firebase/config'
+import getUser from '@/composables/auth/getUser'
 
 export default {
   emits: ['sentData'],

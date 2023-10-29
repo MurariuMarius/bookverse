@@ -17,7 +17,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import useLogin from '@/composables/useLogin'
+import useLogin from '@/composables/auth/useLogin'
 
 export default {
   setup() {

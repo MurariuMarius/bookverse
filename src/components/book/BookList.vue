@@ -7,10 +7,10 @@
 </template>
 
 <script>
-import BookListItem from '@/components/BookListItem.vue'
-import Spinner from '@/components/Spinner.vue'
+import BookListItem from '@/components/book/BookListItem.vue'
+import Spinner from '@/components/utils/Spinner.vue'
 import { onMounted, ref } from 'vue'
-import useGetBooksWithOffers from '@/composables/useGetBooksWithOffers'
+import useGetBooksWithOffers from '@/composables/services/useGetBooksWithOffers'
 
 export default {
   components: { BookListItem, Spinner },

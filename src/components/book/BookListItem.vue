@@ -16,7 +16,7 @@
 <script>
 import { computed } from 'vue';
 
-import useGetBookIcon from '@/composables/useGetBookIcon'
+import useGetBookIcon from '@/composables/utils/useGetBookIcon'
 import { useRouter } from 'vue-router';
 
 export default {

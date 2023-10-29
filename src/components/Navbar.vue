@@ -20,8 +20,8 @@
 <script>
 import { useRouter } from 'vue-router'
 
-import useSignout from '@/composables/useSignout'
-import getUser from '@/composables/getUser'
+import useSignout from '@/composables/auth/useSignout'
+import getUser from '@/composables/auth/getUser'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import { computed } from 'vue'

@@ -3,7 +3,7 @@ const { logger } = require('firebase-functions/v2')
 
 const { Timestamp } = require('firebase-admin/firestore')
 
-const { firestoreService } = require('./admin')
+const { firestoreService } = require('../admin')
 
 exports.createOrder = onCall(async (request) => {
   const parseCreateOrderRequest = (request) => {    

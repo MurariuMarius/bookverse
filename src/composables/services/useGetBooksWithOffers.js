@@ -1,7 +1,7 @@
 import { firestoreService } from "@/firebase/config"
 import { ref } from "vue"
 
-import useGetOffersForBook from '@/composables/useGetOffersForBook'
+import useGetOffersForBook from '@/composables/services/useGetOffersForBook'
 
 const error = ref('') 
 const { getOffersForBook } = useGetOffersForBook()

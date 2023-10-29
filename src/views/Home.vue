@@ -15,13 +15,12 @@
 </template>
 
 <script>
-import BookList from '@/components/BookList.vue'
-import CreateOffer from '@/components/CreateOffer.vue';
+import BookList from '@/components/book/BookList.vue'
+import CreateOffer from '@/components/offer/CreateOffer.vue'
 import Navbar from '@/components/Navbar.vue'
-import useGetDocByID from '@/composables/useGetDocByID';
-import { storageService } from '@/firebase/config';
-import { computed, ref, uploadBytes } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   components: { BookList, CreateOffer, Navbar },
