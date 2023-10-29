@@ -15,11 +15,16 @@ exports.changeDeliveryDetails = onCall(async (request) => {
     }
   }
 
-  const data = (await firestoreService
+  const data = await firestoreService
     .collection(request.data.collection)
-    .doc(request.data.id).get()).data()
+    .doc(request.data.id).get()
 
-  await authorizeOperation(request.auth.uid, async () => { return Reflect.get(data, request.data.ownerIDField) })
+  await authorizeOperation(request.auth.uid, async () => { 
+    if (request.data.ownerIDField === '_id') {
+      return data.id
+    }
+    return Reflect.get(data.data(), request.data.ownerIDField)
+   })
 
   validateChangeDeliveryRequest(request.data)
 
