@@ -12,12 +12,7 @@
     <section class="delivery">
       <section class="delivery-details">
         <h3>Delivery details:</h3>
-        <form @submit.prevent="">
-          <input type="text" placeholder="Full name" required v-model="name">
-          <input type="text" placeholder="Phone number" required v-model="phone" @blur="isValidPhone">
-          <textarea type="text" placeholder="Delivery address" required v-model="address"></textarea>
-        </form>
-        <p class="error" v-if="phoneError">{{ phoneError }}</p>
+        <DeliveryDetails @sentData="getDeliveryDetails"/>
         <span v-if="noStoredUserData">
           <input type="checkbox" class="checkbox" v-model="saveDeliveryDetails">
           <label>Save delivery details to my account.</label>
@@ -37,26 +32,21 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import { shoppingCart } from '@/composables/shoppingCart'
 import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
-import { useRouter } from 'vue-router'
-import getUser from '@/composables/getUser'
-import { firestoreService } from '@/firebase/config'
+import DeliveryDetails from '@/components/DeliveryDetails.vue'
 
 export default {
+  components: { DeliveryDetails },
   setup() {
     const functions = getFunctions()
 
     const orders = ref(shoppingCart.getOrders())
 
-    const name = ref('')
-    const phone = ref('')
-    const address = ref('')
-    
-    const phoneError = ref('')
     const agreedTermsOfServiceError = ref('')
 
     const agreedTermsOfService = ref(false)
@@ -65,35 +55,22 @@ export default {
 
     const router = useRouter()
 
-    const { user } = getUser()
+    let deliveryDetails = null
 
-    onMounted(async () => {
-      const userData = (await firestoreService.collection('users').doc(user.value.uid).get()).data()
-      if (userData.name) {
-        name.value = userData.name
-        phone.value = userData.phone
-        address.value = userData.address
-        noStoredUserData.value = false
-      }
-    })
-    
     const total = ref(orders.value
         .map(o => o.offer.price)
         .reduce((acc, el) => acc += parseFloat(el), 0)
         .toFixed(2)
     )
 
-    const isValidPhone = () => {
-      if (!/^[\+0][0-9]{6,15}$/.test(phone.value)) {
-        phoneError.value = 'Invalid phone number'
-        return false
-      }
-      phoneError.value = ''
-      return true
+    const getDeliveryDetails = (details) => {
+      console.log(details);
+      deliveryDetails = details
+      noStoredUserData.value = details.noStoredUserData
     }
 
     const placeOrder = async () => {
-      if (!isValidPhone() || !name.value || !address.value) {
+      if (!deliveryDetails || !deliveryDetails.name || !deliveryDetails.address || deliveryDetails.phoneError) {
         return
       }
       
@@ -106,10 +83,10 @@ export default {
       try {
         await createOrder({
           items: orders.value,
-          name: name.value,
+          name: deliveryDetails.name,
           totalAmount: total.value,
-          phone: phone.value,
-          address: address.value,
+          phone: deliveryDetails.phone,
+          address: deliveryDetails.address,
           saveDeliveryDetails: saveDeliveryDetails.value 
         })
         shoppingCart.empty()
@@ -120,7 +97,7 @@ export default {
       }
     }
 
-    return { address, name, orders, phone, phoneError, noStoredUserData, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, isValidPhone, placeOrder }
+    return { orders, noStoredUserData, total, agreedTermsOfService, agreedTermsOfServiceError, saveDeliveryDetails, getDeliveryDetails, placeOrder }
   }
 }
 </script>
