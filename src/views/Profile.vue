@@ -5,6 +5,10 @@
   <section class="welcome">
     <h1>Hello, {{ user.displayName }} 👋</h1>
   </section>
+  <section class="credentials">
+    <h1 @click="toggleManageCredentials">Manage credentials</h1>
+    <ManageCredentials v-if="showManageCredentials"/>
+  </section>
   <section class="user">
     <h1 @click="toggleDeliveryDetails">Delivery details</h1>
     <div v-if="showDeliveryDetails">
@@ -38,6 +42,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import ManageCredentials from '@/components/forms/ManageCredentials.vue'
 import NotificationAfterRedirection from '@/components/utils/NotificationAfterRedirection.vue'
 import Notification from '@/components/utils/Notification.vue'
 import Offer from '@/components/offer/Offer.vue'
@@ -51,7 +56,7 @@ import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDe
 import useNotification from '@/composables/utils/useNotification'
 
 export default {
-  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner },
+  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner, ManageCredentials },
   setup(props) {
     const { user } = getUser()
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
@@ -68,6 +73,7 @@ export default {
     const offers = ref(new Map())
     const orders = ref(new Map())
     
+    const showManageCredentials = ref(false)
     const showDeliveryDetails = ref(false)
     const showOrders = ref(true)
     const showOffers = ref(true)
@@ -89,6 +95,10 @@ export default {
       address.value = details.address
       phone.value = details.phone
       phoneError.value = details.phoneError
+    }
+
+    const toggleManageCredentials = () => {
+      showManageCredentials.value = !showManageCredentials.value
     }
 
     const toggleDeliveryDetails = () => {
@@ -121,7 +131,7 @@ export default {
       ordersLoaded.value = true
     }
 
-    return { showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers }
+    return { showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials }
   }
 }
 </script>
