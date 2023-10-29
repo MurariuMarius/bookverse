@@ -14,17 +14,23 @@
     </section>
     <section class="manage">
       <p v-if="!showManageOrderMenu" @click="toggleManageOrderMenu">Manage order</p>
-      <div>
-        <h3>Change order delivery</h3>
-        <DeliveryDetails :name="order.name" :phone="order.phone" :address="order.address" @sentData="getDeliveryDetails" />
-        <button @click="handleChangeDeliveryDetails">Change delivery</button>
-        <h3>Removed items</h3>
-        <p v-for="item in itemsToBeRemoved">
-          {{ item.title }} - {{ item.authors }} - {{ item.price }} €
-        </p>
-        <p>New total: {{ newTotal }} €</p>
-        <button @click="handleRemoveItems">Apply changes</button>
-        <button @click="handleDeleteOrder">Delete order</button>
+      <div v-else>
+        <div class="delivery">
+          <h3>Change order delivery</h3>
+          <DeliveryDetails :name="order.name" :phone="order.phone" :address="order.address" @sentData="getDeliveryDetails" />
+          <button @click="handleChangeDeliveryDetails">Change delivery</button>
+        </div>
+        <div class="remove-items">
+          <h3>Removed items</h3>
+          <p>Click on any item to remove it.</p>
+          <p>Modifications are allowed for up to 5 minutes after order placement.<br>Please contact us for any further assistance.</p>
+          <p v-for="item in itemsToBeRemoved" class="items-to-be-removed">
+            {{ item.title }} - {{ item.authors }} - {{ item.price }} €
+          </p>
+          <p>New total: {{ newTotal }} €</p>
+          <button @click="handleRemoveItems">Apply changes</button>
+          <button @click="handleDeleteOrder">Delete order</button>
+        </div>
       </div>
     </section>
   </div>
@@ -162,11 +168,40 @@ export default {
   align-items: center;
 }
 
+.manage {
+  width: 90%;
+}
+
+.manage > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.delivery {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.remove-items {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  flex-grow: 3;
+}
 .manage > p {
   text-decoration: underline;
 }
 
 .manage > p:hover {
   cursor: pointer;
+}
+
+.items-to-be-removed {
+  margin: 0;
 }
 </style>
