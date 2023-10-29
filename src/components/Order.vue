@@ -16,8 +16,8 @@
       <p v-if="!showManageOrderMenu" @click="toggleManageOrderMenu">Manage order</p>
       <div>
         <h3>Change order delivery</h3>
-        <DeliveryDetails />
-        <button>Change delivery</button>
+        <DeliveryDetails :name="order.name" :phone="order.phone" :address="order.address" @sentData="getDeliveryDetails" />
+        <button @click="handleChangeDeliveryDetails">Change delivery</button>
         <h3>Removed items</h3>
         <p v-for="item in itemsToBeRemoved">
           {{ item.title }} - {{ item.authors }} - {{ item.price }} €
@@ -32,6 +32,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import DeliveryDetails from '@/components/DeliveryDetails.vue'
@@ -39,7 +40,7 @@ import OrderItem from '@/components/OrderItem.vue'
 import Notification from '@/components/Notification.vue'
 
 import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
-import { useRouter } from 'vue-router'
+import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
 
 export default {
   components: { DeliveryDetails, OrderItem, DeliveryDetails, Notification },
@@ -58,7 +59,9 @@ export default {
     const router = useRouter()
 
     const showManageOrderMenu = ref(false)
-    
+
+    const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
+
     const itemsToBeRemoved = ref([])
     const newTotal = ref(parseFloat(props.order.totalAmount))
 
@@ -79,6 +82,25 @@ export default {
       })
       
       newTotal.value = newTotal.value - parseFloat(order.offer.price)
+    }
+
+    const getDeliveryDetails = (details) => {
+      name.value = details.name
+      phone.value = details.phone
+      address.value = details.address
+    }
+
+    const handleChangeDeliveryDetails = async () => {
+      if (phoneError.value) {
+        return
+      }
+
+      try {
+        await changeDeliveryDetails('orders', props.order.id, 'buyerID')
+        redirectToPageWithMessage(router, 'profile', 'Successfully changed delivery details.', 'success')
+      } catch (err) {
+        redirectToPageWithMessage(router, 'profile', err.message, 'error')
+      }
     }
     
     const handleRemoveItems = async () => {
@@ -111,7 +133,7 @@ export default {
       }
     }
 
-    return { itemsToBeRemoved, newTotal, showItems, showManageOrderMenu, handleRemoveItems, handleDeleteOrder, removeOrder, toggleManageOrderMenu }
+    return { itemsToBeRemoved, newTotal, showItems, showManageOrderMenu, getDeliveryDetails, handleChangeDeliveryDetails, handleRemoveItems, handleDeleteOrder, removeOrder, toggleManageOrderMenu }
   }
 }
 </script>

@@ -14,25 +14,28 @@ import { firestoreService } from '@/firebase/config'
 
 export default {
   emits: ['sentData'],
-  setup(_, { emit }) {
+  props: { name : String, phone: String, address : String },
+  setup(props, { emit }) {
     const { user } = getUser()
 
-    const name = ref('')
-    const phone = ref('')
-    const address = ref('')
+    const name = ref(props.name)
+    const phone = ref(props.phone)
+    const address = ref(props.address)
 
     const phoneError = ref('')
     const noStoredUserData = ref(true)
     
     onMounted(async () => {
-      const userData = (await firestoreService.collection('users').doc(user.value.uid).get()).data()
-      if (userData.name) {
-        name.value = userData.name
-        phone.value = userData.phone
-        address.value = userData.address
-        noStoredUserData.value = false
-      }
-      sendForm()
+      if (!props.name) {
+        const userData = (await firestoreService.collection('users').doc(user.value.uid).get()).data()
+        if (userData.name) {
+          name.value = userData.name
+          phone.value = userData.phone
+          address.value = userData.address
+          noStoredUserData.value = false
+        }
+        sendForm()
+      } 
     })
 
     const isValidPhone = () => {
