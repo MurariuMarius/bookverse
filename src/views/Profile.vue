@@ -1,5 +1,5 @@
 <template>
-  <Spinner v-if="(!error && !offers.size) || !ordersLoaded" />
+  <Spinner v-if="(!offerError && !offers.size) || (!orderError && !orders.size) || (orders.size && !ordersLoaded)" />
   <NotificationAfterRedirection v-else :route="route" :window="getWindow()" />
   <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType" />
   <section class="welcome">
@@ -15,7 +15,7 @@
   <section class="orders">
     <h1 @click="toggleMyOrders">My orders</h1>
     <div v-if="showOrders">
-      <p>You haven't placed any orders yet.</p>
+      <p v-if="!orders.size">You haven't placed any orders yet.</p>
       <div v-if="orders" class="orderList">
         <Order v-for="[order, orderItems] in orders" :key="order" :order="order" :orderItems="orderItems" @loaded="pageLoaded" />
       </div>
@@ -24,7 +24,7 @@
   <section class="offers">
     <h1 @click="toggleMyOffers">My offers</h1>
     <div v-if="showOffers">
-      <p v-if="error">You haven't made any offers yet.</p>
+      <p v-if="!offers.size">You haven't made any offers yet.</p>
       <p v-else>Sold items will be marked green.</p>
       <div v-if="offers">
         <Offer v-for="[offer, book] in offers" :offer="offer" :book="book"/>
@@ -59,8 +59,8 @@ export default {
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
     const { showNotification, notificationMessage, notificationType, toggleNotification } = useNotification()
 
-    const { error, getOffersForUserByID } = useGetOffersForUserByID()
-    const { getOrdersForUserByID } = useGetOrdersForUserByID()
+    const { error: offerError, getOffersForUserByID } = useGetOffersForUserByID()
+    const { error: orderError, getOrdersForUserByID } = useGetOrdersForUserByID()
 
     const route = useRoute()
 
@@ -123,7 +123,7 @@ export default {
       ordersLoaded.value = true
     }
 
-    return { showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, error, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers }
+    return { showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers }
   }
 }
 </script>
