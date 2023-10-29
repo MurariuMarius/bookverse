@@ -39,6 +39,7 @@ exports.createOrder = onCall(async (request) => {
       buyerID: getUserID(),
       name: request.data.name,
       items: items,
+      totalAmount: request.data.totalAmount,
       phone: validatePhoneNumber(request.data.phone),
       address: request.data.address,
       createdAt: Timestamp.now()

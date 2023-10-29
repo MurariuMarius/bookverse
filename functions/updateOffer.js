@@ -1,11 +1,18 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { logger } = require('firebase-functions/v2')
 
-const { firestoreService } = require('./admin')
+const { firestoreService, authorizeOperation } = require('./admin')
+const { getDocByID } = require('./getDocByID')
 
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 
 exports.updateOffer = onCall(async (request) => {
+
+  await authorizeOperation(request.auth.uid, async () => {
+    const offer = await getDocByID('offers', request.data.offer.id)
+    return offer.sellerID
+  })
+
   const parseOfferUpdateRequest = (request) => {
     const validatePrice = (price) => {
       const validPrice = parseFloat(price.replace(',', '.'))

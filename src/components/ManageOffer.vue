@@ -10,7 +10,7 @@
       </form>
       <p v-if="priceError" class="error">{{ priceError }}</p>
       <div class="options">
-        <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
+        <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  bookCondition === option}">{{ option }}</button>
       </div>
       <div class="inline">
         <button class="update" @click="handleUpdate">Update</button>
@@ -21,28 +21,28 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { getFunctions, httpsCallable } from 'firebase/functions'
-import { useRouter } from 'vue-router';
-import { firestoreService } from '@/firebase/config';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router'
 
-import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage';
+import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
+import useManageOffer from '@/composables/useManageOffer'
 
 export default {
   emits: [ 'close' ],
   props: { offer: Object, title: String, authors: String },
   setup(props, { emit }) {
     const bookConditions = ref(['New', 'As New', 'Good', 'Fair', 'Poor'])
-    const selectedOption = ref(`${props.offer.condition}`)
-    const price = ref(`${props.offer.price}`)
-    const priceError = ref('')
 
-    const functions = getFunctions()
+    const { bookCondition, price, priceError, initializeFields, updateOffer, deleteOffer } = useManageOffer()
 
     const router = useRouter()
 
+    onMounted(() => {
+      initializeFields(props.offer)
+    })
+
     const selectOption = e => {
-      selectedOption.value = e.target.innerHTML
+      bookCondition.value = e.target.innerHTML
     }
 
     const checkPrice = () => {
@@ -57,32 +57,25 @@ export default {
       emit('close')
     }
 
-    const handleUpdate = () => {
-      if (!priceError.value) {        
-        const updateOffer = httpsCallable(functions, 'updateOffer')
-        const offer = {...props.offer, price: price.value, condition: selectedOption.value }
-        updateOffer({offer: offer})
-          .then(result => {
-            redirectToPageWithMessage(router, 'profile', 'Offer updated successfully.', 'success')
-          })
-          .catch(err => {
-            console.log(err)
-            redirectToPageWithMessage(router, 'profile', 'A server error occurred.' + err.message, 'error')
-          })
+    const handleUpdate = async () => {
+      try {
+        await updateOffer(props.offer)
+        redirectToPageWithMessage(router, 'profile', 'Offer updated successfully.', 'success')
+      } catch (err) {
+        redirectToPageWithMessage(router, 'profile', 'A server error occurred.' + err.message, 'error')
       }
     }
 
     const handleDelete = async () => {
       try {
-        await firestoreService.collection('offers').doc(props.offer.id).delete()
+        await deleteOffer(props.offer)
         redirectToPageWithMessage(router, 'profile', 'Offer deleted successfully.', 'success')
       } catch (err) {
         redirectToPageWithMessage(router, 'profile', 'A server error occurred.' + err.message, 'error')
       }
-      
     }
 
-    return { bookConditions, price, priceError, selectedOption, close, checkPrice, handleUpdate, handleDelete, selectOption }
+    return { bookConditions, price, priceError, bookCondition, close, checkPrice, handleUpdate, handleDelete, selectOption }
   }
 }
 </script>

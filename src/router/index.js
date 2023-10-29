@@ -7,6 +7,7 @@ import Book from '@/views/Book'
 import Profile from '@/views/Profile'
 import ShoppingCart from '@/views/ShoppingCart'
 import Checkout from '@/views/Checkout'
+import Admin from '@/views/Admin'
 
 import { authService } from '@/firebase/config'
 
@@ -58,6 +59,11 @@ const routes = [
     path: '/checkout',
     name: 'checkout',
     component: Checkout,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
   },
 ]
 

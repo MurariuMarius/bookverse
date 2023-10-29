@@ -107,6 +107,7 @@ export default {
         await createOrder({
           items: orders.value,
           name: name.value,
+          totalAmount: total.value,
           phone: phone.value,
           address: address.value,
           saveDeliveryDetails: saveDeliveryDetails.value 
