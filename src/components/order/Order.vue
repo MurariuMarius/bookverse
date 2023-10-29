@@ -42,11 +42,11 @@ import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import DeliveryDetails from '@/components/DeliveryDetails.vue'
-import OrderItem from '@/components/OrderItem.vue'
-import Notification from '@/components/Notification.vue'
+import OrderItem from '@/components/order/OrderItem.vue'
+import Notification from '@/components/utils/Notification.vue'
 
-import redirectToPageWithMessage from '@/composables/redirectToPageWithMessage'
-import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
+import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
+import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDetails'
 
 export default {
   components: { DeliveryDetails, OrderItem, DeliveryDetails, Notification },

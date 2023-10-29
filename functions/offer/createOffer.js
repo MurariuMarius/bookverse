@@ -4,7 +4,7 @@ const { logger } = require('firebase-functions/v2')
 const { Timestamp } = require('firebase-admin/firestore')
 const { getDownloadURL } = require('firebase-admin/storage')
 
-const { firestoreService, storageBucket } = require('./admin')
+const { firestoreService, storageBucket } = require('../admin')
 
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 

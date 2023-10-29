@@ -35,22 +35,20 @@
 
 <script>
 import { onMounted, ref } from 'vue'
-
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
-import NotificationAfterRedirection from '@/components/NotificationAfterRedirection.vue'
-import Notification from '@/components/Notification.vue'
-import Offer from '@/components/Offer.vue'
-import Order from '@/components/Order.vue'
-import Spinner from '@/components/Spinner.vue'
-
 import { useRoute } from 'vue-router'
 
-import getUser from '@/composables/getUser'
-import useGetOffersForUserByID from '@/composables/useGetOffersForUserByID'
-import useGetOrdersForUserByID from '@/composables/useGetOrdersForUserByID'
-import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
-import useNotification from '@/composables/useNotification'
-import { firestoreService } from '@/firebase/config'
+import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import NotificationAfterRedirection from '@/components/utils/NotificationAfterRedirection.vue'
+import Notification from '@/components/utils/Notification.vue'
+import Offer from '@/components/offer/Offer.vue'
+import Order from '@/components/order/Order.vue'
+import Spinner from '@/components/utils/Spinner.vue'
+
+import getUser from '@/composables/auth/getUser'
+import useGetOffersForUserByID from '@/composables/services/useGetOffersForUserByID'
+import useGetOrdersForUserByID from '@/composables/services/useGetOrdersForUserByID'
+import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDetails'
+import useNotification from '@/composables/utils/useNotification'
 
 export default {
   components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner },

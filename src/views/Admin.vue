@@ -44,13 +44,13 @@
 import { ref } from 'vue'
 import { getFunctions, httpsCallable } from 'firebase/functions' 
 
-import useGetDocByID from '@/composables/useGetDocByID'
-import useManageOffer from '@/composables/useManageOffer'
-import useNotification from '@/composables/useNotification'
-import useChangeDeliveryDetails from '@/composables/useChangeDeliveryDetails'
-import sendUserPasswordResetEmail from '@/composables/sendUserPasswordResetEmail'
+import useGetDocByID from '@/composables/utils/useGetDocByID'
+import useManageOffer from '@/composables/services/useManageOffer'
+import useNotification from '@/composables/utils/useNotification'
+import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDetails'
+import sendUserPasswordResetEmail from '@/composables/auth/sendUserPasswordResetEmail'
 
-import Notification from '@/components/Notification.vue'
+import Notification from '@/components/utils/Notification.vue'
 
 export default {
   components: { Notification },

@@ -1,6 +1,6 @@
 import { firestoreService } from "@/firebase/config"
 import { ref } from "vue"
-import useGetDocByID from "@/composables/useGetDocByID"
+import useGetDocByID from "@/composables/utils/useGetDocByID"
 
 const error = ref('') 
 

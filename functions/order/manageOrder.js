@@ -1,6 +1,6 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
-const { firestoreService, authorizeOperation } = require('./admin')
-const { getDocByID } = require('./getDocByID')
+const { firestoreService, authorizeOperation } = require('../admin')
+const { getDocByID } = require('../getDocByID')
 const { Timestamp } = require('firebase-admin/firestore')
 
 const secondsAfterPlacementAllowingOrderModifications = 60

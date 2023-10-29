@@ -6,7 +6,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import Notification from '@/components/Notification.vue'
+import Notification from '@/components/utils/Notification.vue'
 
 export default {
   components: { Notification },

@@ -23,7 +23,7 @@
 import { ref } from 'vue'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
-import BookConditionsDescription from '@/components/BookConditionsDescription.vue'
+import BookConditionsDescription from '@/components/book/BookConditionsDescription.vue'
 
 export default {
   components: { BookConditionsDescription },

@@ -19,7 +19,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import useSignup from '@/composables/useSignup'
+import useSignup from '@/composables/auth/useSignup'
 import { Timestamp } from '@/firebase/config'
 import { firestoreService } from '@/firebase/config'
 
