@@ -33,6 +33,7 @@ html, body {
   width: 90%;
   align-self: center;
   flex: 1 0 auto;
+  padding: 40px 0 70px;
 }
 
 .background {
