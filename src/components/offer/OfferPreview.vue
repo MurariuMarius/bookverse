@@ -3,7 +3,7 @@
     <h3 class="price"><pre>{{ offer.price }}  €</pre></h3>
     <div class="details">
       <p class="condition">{{ offer.condition }}</p>
-      <p class="seller">Seller</p>
+      <!-- <p class="seller">{{ offer.sellerID }}</p> -->
     </div>
   </div>
 </template>
