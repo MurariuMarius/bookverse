@@ -1,5 +1,4 @@
 <template>
-  <Navbar />
   <main>
     <!-- <CreateOffer /> -->
     <form @submit.prevent="searchBooks">

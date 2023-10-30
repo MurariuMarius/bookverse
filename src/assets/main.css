@@ -12,9 +12,15 @@
   --error-red: #ec1717;
 }
 
+html, body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
 .container {
   width: 90%;
-  margin: 50px auto;
+  margin: auto;
 }
 
 .background {
@@ -29,10 +35,10 @@
 }
 
 button {
-  margin: 20px auto;
   border-radius: 25px;
   padding: 10px 25px;
   background-color: #edebeb;
+  font-size: medium;
 }
 
 button:hover {
@@ -44,17 +50,8 @@ button:hover {
   padding: 10px;
 }
 
-.container div {
-  text-align: center;
-  margin: auto;
-}
-
 .container input {
   width: 90%;
   margin: 10px auto;
   padding: 10px;
-}
-
-.container button {
-  font-size: medium;
 }

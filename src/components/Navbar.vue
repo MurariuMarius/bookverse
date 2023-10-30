@@ -1,20 +1,18 @@
 <template>
   <nav>
-    <div class="menu">
-      <div v-if="user">
-        <div class="shopping-cart">
-          <p v-show="shoppingCartItemCount" >{{ shoppingCartItemCount }}</p>
-          <img src="@/assets/shopping-cart.svg" alt="shopping-cart" @click="goToShoppingCart">
-        </div>
-        <h2 @click="goToProfile">{{ user.displayName }}</h2>
-        <button @click="handleSignout">Sign out</button>
+    <img class="logo" src="@/assets/logo.png" alt="logo" @click="goToHomePage">
+    <div v-if="user">
+      <div class="shopping-cart">
+        <p v-show="shoppingCartItemCount" >{{ shoppingCartItemCount }}</p>
+        <img src="@/assets/shopping-cart.svg" alt="shopping-cart" @click="goToShoppingCart">
       </div>
-      <div v-else>
-        <button @click="handleLogin">Log in</button>
-      </div>
+      <h2 class="user" @click="goToProfile">{{ user.displayName }}</h2>
+      <button @click="handleSignout">Sign out</button>
+    </div>
+    <div v-else>
+      <button @click="handleLogin">Log in</button>
     </div>
   </nav>
-
 </template>
 
 <script>
@@ -45,6 +43,10 @@ export default {
       router.push({ name: 'login' })
     }
 
+    const goToHomePage = () => {
+      router.push({ name: 'home' })
+    }
+
     const goToProfile = () => {
       router.push({ name: 'profile' })
     }
@@ -53,35 +55,40 @@ export default {
       router.push({ name: 'shoppingCart' })
     }
 
-    return { shoppingCart, user, shoppingCartItemCount, goToProfile, handleLogin, handleSignout, goToShoppingCart }
+    return { shoppingCart, user, shoppingCartItemCount, goToHomePage, goToProfile, handleLogin, handleSignout, goToShoppingCart }
   }
 }
 </script>
 
 <style scoped>
-.menu {
-  margin-right: 0;
-}
-
-.menu > div {
-  width: 100%;
-  display: inline-flex;
+nav {
+  padding: 20px 5%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-around;
+  background-image: linear-gradient(to bottom right, #69c606, var(--dark-green));
+  row-gap: 25px;
+  column-gap: 30%;
 }
 
-button {
-  margin: 20px;
-}
-
-.menu h2 {
-  color: #f6f3f3;
+.logo {
+  width: 300px;
   cursor: pointer;
 }
-nav {
-  width: 100%;
-  border-radius: 15px;
-  background-image: linear-gradient(to bottom right, #69c606, var(--dark-green));
+
+nav > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  column-gap: 15px;
+}
+
+.user {
+  color: #f6f3f3;
+  cursor: pointer;
 }
 
 .shopping-cart {
@@ -91,7 +98,7 @@ nav {
 
 .shopping-cart img {
   height: 50px;
-  margin-right: 15px;
+  margin: 0;
 }
 
 .shopping-cart img:hover {
@@ -99,13 +106,14 @@ nav {
 }
 
 .shopping-cart p {
-  background-color: #ff0000;
+  background-color: #ff3232;
+  color: rgb(230, 230, 230);
   border-radius: 50%;
-  padding-left: 15%;
-  padding-right: 15%;
+  padding-left: 19%;
+  padding-right: 19%;
   position: absolute;
   top: -40%;
-  left: 60%;
+  left: 80%;
 }
 
 </style>
