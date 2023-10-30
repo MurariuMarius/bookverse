@@ -14,4 +14,8 @@ footer {
   color: #4f5060;
   font-weight: 400;
 }
+
+footer p {
+  text-align: left;
+}
 </style>

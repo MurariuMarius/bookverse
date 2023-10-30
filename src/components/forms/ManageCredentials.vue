@@ -12,7 +12,7 @@
     <input type="password" placeholder="New password (again)" required v-model="newPasswordAgain">
     <button>Reset password</button>
   </form>
-  <p class="error">{{ error }}</p>
+  <p v-if="error" class="error">{{ error }}</p>
   <h2>Delete account</h2>
   <input type="password" placeholder="Password" required v-model="passwordDeleteAccount">
   <button @click="handleDeleteAccount">Delete account</button>
@@ -125,3 +125,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+button {
+  margin: 20px auto;
+}
+</style>

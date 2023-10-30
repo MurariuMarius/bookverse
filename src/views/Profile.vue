@@ -17,8 +17,8 @@
     </div>
   </section>
   <section class="create-offer">
-    <h1>Create offer</h1>
-    <div>
+    <h1 @click="toggleCreateOffer">Create offer</h1>
+    <div v-if="showCreateOffer">
       <CreateOffer />
     </div>
   </section>
@@ -82,6 +82,7 @@ export default {
     
     const showManageCredentials = ref(false)
     const showDeliveryDetails = ref(false)
+    const showCreateOffer = ref(false)
     const showOrders = ref(true)
     const showOffers = ref(true)
 
@@ -112,6 +113,10 @@ export default {
       showDeliveryDetails.value = !showDeliveryDetails.value
     }
 
+    const toggleCreateOffer = () => {
+      showCreateOffer.value = !showCreateOffer.value
+    }
+
     const toggleMyOffers = () => {
       showOffers.value = !showOffers.value
     }
@@ -138,16 +143,26 @@ export default {
       ordersLoaded.value = true
     }
 
-    return { showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials }
+    return { showCreateOffer, showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials, toggleCreateOffer }
   }
 }
 </script>
 
 <style scoped>
-.offers, .user, .orders, .welcome {
-  margin: auto;
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   width: 100%;
   max-width: 1300px;
+}
+
+section > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px;
 }
 
 .welcome h1 {
@@ -158,11 +173,13 @@ export default {
 .welcome h1:hover {
   cursor: default;
   text-decoration: none;
+  color: inherit;
 }
 
 section > h1:hover {
   cursor: pointer;
   text-decoration: underline;
+  color: var(--x-dark-green);
 }
 
 .orderList {

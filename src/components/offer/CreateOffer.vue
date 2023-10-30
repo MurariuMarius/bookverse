@@ -1,22 +1,18 @@
 <template>
-  <div>
-    <h2>Create a book offer</h2>
-    <div>
-      <div class="form" @submit.prevent="handleSubmit">
-        <input type="text" required placeholder="Title" v-model="title">
-        <input type="text" required placeholder="Authors" v-model="authors">
-        <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
-        <input type="text" required placeholder="Price in EUR" v-model="price" @blur="checkPrice">
-        <pre class="error">{{ ISBN_error }}</pre>
-        <pre class="error">{{ priceError }}</pre>
-      </div>
-      <div class="options">
-        <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
-      </div>
-      <button @click="handleSubmit" type="submit">Create</button>
-    </div>
-      <BookConditionsDescription />
+  <h2>Create a book offer</h2>
+  <form @submit.prevent="">
+    <input type="text" required placeholder="Title" v-model="title">
+    <input type="text" required placeholder="Authors" v-model="authors">
+    <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
+    <input type="text" required placeholder="Price in EUR" v-model="price" @blur="checkPrice">
+    <pre v-if="ISBN_error" class="error">{{ ISBN_error }}</pre>
+    <pre v-if="priceError" class="error">{{ priceError }}</pre>
+  </form>
+  <div class="options">
+    <button v-for="option in bookConditions" :key="option" @click="selectOption" :class="{'highlight':  selectedOption === option}">{{ option }}</button>
   </div>
+  <button @click="handleSubmit" type="submit">Create</button>
+  <BookConditionsDescription />
 </template>
 
 <script>

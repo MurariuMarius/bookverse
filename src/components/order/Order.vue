@@ -28,8 +28,10 @@
             {{ item.title }} - {{ item.authors }} - {{ item.price }} €
           </p>
           <p>New total: {{ newTotal }} €</p>
-          <button @click="handleRemoveItems">Apply changes</button>
-          <button @click="handleDeleteOrder">Delete order</button>
+          <div class="buttons">
+            <button @click="handleRemoveItems">Apply changes</button>
+            <button @click="handleDeleteOrder">Delete order</button>
+          </div>
         </div>
       </div>
     </section>
@@ -157,7 +159,11 @@ export default {
 }
 
 .items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  row-gap: 20px;
 }
 
 .general {
@@ -170,6 +176,7 @@ export default {
 
 .manage {
   width: 90%;
+  padding-bottom: 20px;
 }
 
 .manage > div {
@@ -183,15 +190,15 @@ export default {
 .delivery {
   display: flex;
   flex-direction: column;
-  margin: 0;
+  align-items: center;
+  flex-grow: 0.5;
 }
 
 .remove-items {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0;
-  flex-grow: 3;
+  align-items: center;
 }
 .manage > p {
   text-decoration: underline;
@@ -203,5 +210,10 @@ export default {
 
 .items-to-be-removed {
   margin: 0;
+}
+
+.buttons {
+  display: inline-flex;
+  column-gap: 10px;
 }
 </style>

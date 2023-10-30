@@ -30,6 +30,10 @@ form {
   align-items: center;
 }
 
+input, textarea {
+  max-width: 500px;
+}
+
 #app {
   min-height: 100vh;
   display: flex;
@@ -94,7 +98,7 @@ button:hover {
   row-gap: 20px;
 }
 
-.login > form button {
+form button {
   margin: 20px;
 }
 
