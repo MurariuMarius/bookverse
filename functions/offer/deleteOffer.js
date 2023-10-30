@@ -6,6 +6,9 @@ exports.deleteOffer = onCall(async (request) => {
 
   await authorizeOperation(request.auth.uid, async () => {
     const offer = await getDocByID('offers', request.data.offer.id)
+    if (offer.status === 'sold') {
+      return null
+    }
     return offer.sellerID
   })
 
