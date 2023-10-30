@@ -8,14 +8,37 @@ import Profile from '@/views/Profile'
 import ShoppingCart from '@/views/ShoppingCart'
 import Checkout from '@/views/Checkout'
 import Admin from '@/views/Admin'
+import NotFound from '@/views/NotFound'
 
 import { authService } from '@/firebase/config'
+
+const ADMINS = [
+  'admin@bookverse.com'
+]
 
 const redirectIfAlreadyAuth = (to, from, next) => {
   let currentUser = authService.currentUser
   console.log('User', currentUser)
   if (currentUser) {
     next({ name: 'home' })
+  } else {
+    next()
+  }
+}
+
+const requireAuth = (to, from, next) => {
+  let currentUser = authService.currentUser
+  if (!currentUser) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+}
+
+const requireAdminAuth = (to, from, next) => {
+  const currentUser = authService.currentUser
+  if (!currentUser || !ADMINS.includes(currentUser.email)) {
+    next({ path: '/404' })
   } else {
     next()
   }
@@ -49,21 +72,30 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+    beforeEnter: requireAuth,
   },
   {
     path: '/cart',
     name: 'shoppingCart',
     component: ShoppingCart,
+    beforeEnter: requireAuth,
   },
   {
     path: '/checkout',
     name: 'checkout',
     component: Checkout,
+    beforeEnter: requireAuth, 
   },
   {
     path: '/admin',
     name: 'admin',
     component: Admin,
+    beforeEnter: requireAdminAuth,
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'notFound',
+    component: NotFound,
   },
 ]
 
