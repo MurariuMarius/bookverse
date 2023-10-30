@@ -130,4 +130,8 @@ export default {
 button {
   margin: 20px auto;
 }
+
+input {
+  align-self: center;
+}
 </style>

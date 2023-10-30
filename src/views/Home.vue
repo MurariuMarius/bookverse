@@ -54,23 +54,23 @@ export default {
 main {
   display: flex;
   flex-flow: column;
+  justify-content: center;
   align-items: center;
   row-gap: 30px;
+  width: 100%;
 }
 form {
   display: flex;
   flex-direction: row;
   width: 60%;
   min-width: 300px;
-  margin: 20px auto;
   align-items: center;
-  justify-content: space-around;
+  column-gap: 20px;
 }
 .search {
   height: 25px;
   border-radius: 30px;
   text-align: center;
-  margin-right: 15px;
 }
 span {
   font-weight: bold;
