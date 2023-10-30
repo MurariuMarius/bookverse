@@ -21,6 +21,15 @@ const redirectIfAlreadyAuth = (to, from, next) => {
   }
 }
 
+const requireAuth = (to, from, next) => {
+  let currentUser = authService.currentUser
+  if (!currentUser) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -49,21 +58,25 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+    beforeEnter: requireAuth,
   },
   {
     path: '/cart',
     name: 'shoppingCart',
     component: ShoppingCart,
+    beforeEnter: requireAuth,
   },
   {
     path: '/checkout',
     name: 'checkout',
     component: Checkout,
+    beforeEnter: requireAuth, 
   },
   {
     path: '/admin',
     name: 'admin',
     component: Admin,
+    // beforeEnter, requireAdminAuth,
   },
 ]
 
