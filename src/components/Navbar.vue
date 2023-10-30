@@ -37,6 +37,7 @@ export default {
 
     const handleSignout = async () => {
       shoppingCart.empty()
+      router.push({ name: 'home' })
       await signout()
     }
 
