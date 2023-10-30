@@ -1,6 +1,8 @@
 <template>
-  <div ref="notification" v-if="message" class="notification" :class="type" >
-    <p >{{ message }}</p>
+  <div ref="notification" class="notification-container">
+    <div  v-if="message" class="notification" :class="type" >
+      <p >{{ message }}</p>
+    </div>
   </div>
 </template>
 
@@ -22,16 +24,20 @@ export default {
 </script>
 
 <style scoped>
-.notification {
+.notification-container {
   position: sticky;
-  top: 40px;
-  left: 50vw;
-  transform: translateX(-50%);
-  width: 30%;
-  min-width: 300px;
+  top: 30px;
+  left: 0vw;
+  width: 100vw;
   display: flex;
+  align-items: center;
   justify-content: center;
+}
+
+.notification {
   border-radius: 25px;
+  padding: 0 3%;
+  margin: 0 5%;
   color: white;
 }
 
