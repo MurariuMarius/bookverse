@@ -25,11 +25,12 @@ export default {
 
 <style>
 .image {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.05);
   filter: blur(8px);
   background-size: cover;
   background-image: url('https://i0.wp.com/css-tricks.com/wp-content/uploads/2022/05/toc-photo-scaled.jpg?fit=2560%2C1732&ssl=1');
@@ -37,6 +38,9 @@ export default {
 }
 
 .not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: xx-large;
   color: rgb(247, 247, 247);
   position: absolute;

@@ -47,12 +47,24 @@ export default {
 
 <style scoped>
 .shopping-cart {
-  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
   max-width: 1000px;
   width: 90%;
   background-color: var(--light-green);
   border-radius: 25px;
+  padding: 0 20px;
+}
+
+.shopping-cart > h3 {
+  align-self: center;
+}
+
+.orders {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+  row-gap: 25px;
 }
 </style>
