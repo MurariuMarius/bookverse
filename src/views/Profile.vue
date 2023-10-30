@@ -16,6 +16,12 @@
       <button @click="handleChangeDeliveryDetails">Change</button>
     </div>
   </section>
+  <section class="create-offer">
+    <h1>Create offer</h1>
+    <div>
+      <CreateOffer />
+    </div>
+  </section>
   <section class="orders">
     <h1 @click="toggleMyOrders">My orders</h1>
     <div v-if="showOrders">
@@ -41,7 +47,8 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import CreateOffer from '@/components/offer/CreateOffer.vue'
+import DeliveryDetails from '@/components/forms/DeliveryDetails.vue'
 import ManageCredentials from '@/components/forms/ManageCredentials.vue'
 import NotificationAfterRedirection from '@/components/utils/NotificationAfterRedirection.vue'
 import Notification from '@/components/utils/Notification.vue'
@@ -56,7 +63,7 @@ import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDe
 import useNotification from '@/composables/utils/useNotification'
 
 export default {
-  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner, ManageCredentials },
+  components: { CreateOffer, DeliveryDetails, ManageCredentials, Notification, NotificationAfterRedirection, Offer, Order, Spinner },
   setup(props) {
     const { user } = getUser()
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()

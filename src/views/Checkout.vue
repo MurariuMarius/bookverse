@@ -39,7 +39,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 import { shoppingCart } from '@/composables/shoppingCart'
 import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
 
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import DeliveryDetails from '@/components/forms/DeliveryDetails.vue'
 
 export default {
   components: { DeliveryDetails },

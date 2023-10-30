@@ -41,7 +41,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import DeliveryDetails from '@/components/forms/DeliveryDetails.vue'
 import OrderItem from '@/components/order/OrderItem.vue'
 import Notification from '@/components/utils/Notification.vue'
 
