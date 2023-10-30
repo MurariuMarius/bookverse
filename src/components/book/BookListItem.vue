@@ -42,7 +42,7 @@ export default {
     }
 
     const imageLoad = () => {
-      emit('componentLoaded')
+      setTimeout(() => emit('componentLoaded'), 400)
     }
 
     return { authors, imageSource, imageLoad, price, viewBook }
