@@ -19,16 +19,20 @@ html, body {
 }
 
 #app {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  width: 100vw;
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 90%;
   align-self: center;
+  flex: 1 0 auto;
 }
 
 .background {
