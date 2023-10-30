@@ -8,6 +8,7 @@ import Profile from '@/views/Profile'
 import ShoppingCart from '@/views/ShoppingCart'
 import Checkout from '@/views/Checkout'
 import Admin from '@/views/Admin'
+import NotFound from '@/views/NotFound'
 
 import { authService } from '@/firebase/config'
 
@@ -77,6 +78,11 @@ const routes = [
     name: 'admin',
     component: Admin,
     // beforeEnter, requireAdminAuth,
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'notFound',
+    component: NotFound,
   },
 ]
 
