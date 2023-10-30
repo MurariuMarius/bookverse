@@ -18,18 +18,15 @@ service cloud.firestore {
       }
       
       match /offers/{document=**} {
-      	allow read, write: if true;
+      	allow read: if true;
       }
       
-      match /orders/{document=**} {
-      	allow read, write: if true;
+      match /orders/{order} {
+      	allow read: if resource.data.buyerID == request.auth.uid || isAdmin(request.auth.uid);
       }
       
       match /books/{document=**} {
-      	allow read, write: if true;
-      }
-    
-      // allow read, write: if request.time < timestamp.date(2023, 11, 14);
-    
+      	allow read: if true;
+      }    
   }
 }
