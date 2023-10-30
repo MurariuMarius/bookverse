@@ -1,6 +1,5 @@
 <template>
   <main>
-    <!-- <CreateOffer /> -->
     <form @submit.prevent="searchBooks">
       <input class="search" type="text" placeholder="Search books..." v-model="search">
       <button>Search</button>
@@ -15,14 +14,13 @@
 
 <script>
 import BookList from '@/components/book/BookList.vue'
-import CreateOffer from '@/components/offer/CreateOffer.vue'
 import Navbar from '@/components/Navbar.vue'
 
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
-  components: { BookList, CreateOffer, Navbar },
+  components: { BookList, Navbar },
   setup() {
 
     const search = ref('')
@@ -57,6 +55,7 @@ main {
   display: flex;
   flex-flow: column;
   align-items: center;
+  row-gap: 30px;
 }
 form {
   display: flex;
