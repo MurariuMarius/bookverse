@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login">
     <h2>Sign up</h2>
     <form @submit.prevent="handleSubmit" >
       <input type="text" required placeholder="Username" v-model="username">
@@ -9,7 +9,7 @@
       <button>Sign up</button>
     </form>
     <div>
-      Already have an account? <span @click="redirectLogin">Log in</span>
+      Already have an account? <span class="link" @click="redirectLogin">Log in</span>
     </div>
     <div class="error">{{ error }}</div>
   </div>
@@ -67,15 +67,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-div {
-  width: 400px;
-}
-
-span {
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: underline;
-}
-</style>

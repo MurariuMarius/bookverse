@@ -39,7 +39,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 import { shoppingCart } from '@/composables/shoppingCart'
 import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
 
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import DeliveryDetails from '@/components/forms/DeliveryDetails.vue'
 
 export default {
   components: { DeliveryDetails },
@@ -106,31 +106,34 @@ export default {
 <style scoped>
 .checkout {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
   background-color: var(--x-light-green);
   border-radius: 25px;
-  row-gap: 25px;
+  gap: 25px 50px;
+  padding: 0 20px;
+  width: 90%;
+  max-width: 600px;
 }
 
 .delivery {
   display: flex;
   flex-direction: column;
-  flex-grow: 0.4;
   justify-content: space-between;
 }
 
 .delivery-details {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  flex-grow: 0.3;
+  padding: 0 3%;
 }
 
 .total {
@@ -143,7 +146,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin: 0;
 }
 
 .place-order {
@@ -151,6 +153,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  padding-bottom: 20px;
 }
 
 .checkbox {

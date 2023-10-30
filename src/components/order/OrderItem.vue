@@ -48,7 +48,8 @@ export default {
   background-color: #e8e5e5;
   border-radius: 25px;
   justify-content: space-around;
-  margin: 20px auto;
+  padding: 20px 0;
+  column-gap: 5px;
 }
 
 .card:hover {
@@ -57,7 +58,6 @@ export default {
 }
 
 img {
-  margin: 10px auto;
   height: 150px;
 }
 
@@ -69,6 +69,9 @@ img {
 }
 
 .book {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-basis: 50%;
 }
 

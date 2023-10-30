@@ -13,11 +13,14 @@
 
 <style scoped>
 div {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   max-width: 700px;
 }
 
 h3 {
+  align-self: center;
   font-weight: 500;  
 }
 

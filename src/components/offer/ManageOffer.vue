@@ -1,6 +1,6 @@
 <template>
   <div class="background">
-    <div class="center">
+    <div class="manage-offer">
       <p class="close" @click="close">X</p>
       <h2>Manage offer</h2>
       <h4><span class="title">{{ title }}</span> - {{ authors }}</h4>      
@@ -98,29 +98,33 @@ h4 {
 .inline {
   width: 70%;
   max-width: 300px;
-  margin: auto;
-  display: inline-flex;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  column-gap: 20px;
 }
 
 .inline p {
   margin-left: 10px;
 }
 
-.center {
-  margin: 30px auto;
+.manage-offer {
   max-width: 600px;
   width: 90%;
   background-color: white;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
+  padding-bottom: 20px;
+  align-items: center;
 }
 .options {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  padding: 20px 0;
   flex-wrap: wrap;
 }
 .options button {

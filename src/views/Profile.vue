@@ -16,6 +16,12 @@
       <button @click="handleChangeDeliveryDetails">Change</button>
     </div>
   </section>
+  <section class="create-offer">
+    <h1 @click="toggleCreateOffer">Create offer</h1>
+    <div v-if="showCreateOffer">
+      <CreateOffer />
+    </div>
+  </section>
   <section class="orders">
     <h1 @click="toggleMyOrders">My orders</h1>
     <div v-if="showOrders">
@@ -41,7 +47,8 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import DeliveryDetails from '@/components/DeliveryDetails.vue'
+import CreateOffer from '@/components/offer/CreateOffer.vue'
+import DeliveryDetails from '@/components/forms/DeliveryDetails.vue'
 import ManageCredentials from '@/components/forms/ManageCredentials.vue'
 import NotificationAfterRedirection from '@/components/utils/NotificationAfterRedirection.vue'
 import Notification from '@/components/utils/Notification.vue'
@@ -56,7 +63,7 @@ import useChangeDeliveryDetails from '@/composables/services/useChangeDeliveryDe
 import useNotification from '@/composables/utils/useNotification'
 
 export default {
-  components: { DeliveryDetails, Notification, NotificationAfterRedirection, Offer, Order, Spinner, ManageCredentials },
+  components: { CreateOffer, DeliveryDetails, ManageCredentials, Notification, NotificationAfterRedirection, Offer, Order, Spinner },
   setup(props) {
     const { user } = getUser()
     const { name, phone, address, phoneError, changeDeliveryDetails } = useChangeDeliveryDetails()
@@ -75,6 +82,7 @@ export default {
     
     const showManageCredentials = ref(false)
     const showDeliveryDetails = ref(false)
+    const showCreateOffer = ref(false)
     const showOrders = ref(true)
     const showOffers = ref(true)
 
@@ -105,6 +113,10 @@ export default {
       showDeliveryDetails.value = !showDeliveryDetails.value
     }
 
+    const toggleCreateOffer = () => {
+      showCreateOffer.value = !showCreateOffer.value
+    }
+
     const toggleMyOffers = () => {
       showOffers.value = !showOffers.value
     }
@@ -131,16 +143,26 @@ export default {
       ordersLoaded.value = true
     }
 
-    return { showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials }
+    return { showCreateOffer, showManageCredentials, showOffers, showOrders, pageLoaded, ordersLoaded, orders, offers, offerError, orderError, showDeliveryDetails, route, user, showNotification, notificationMessage, notificationType, getDeliveryDetails, getWindow, handleChangeDeliveryDetails, toggleDeliveryDetails, toggleMyOrders, toggleMyOffers, toggleManageCredentials, toggleCreateOffer }
   }
 }
 </script>
 
 <style scoped>
-.offers, .user, .orders, .welcome {
-  margin: auto;
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   width: 100%;
   max-width: 1300px;
+}
+
+section > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px;
 }
 
 .welcome h1 {
@@ -151,11 +173,13 @@ export default {
 .welcome h1:hover {
   cursor: default;
   text-decoration: none;
+  color: inherit;
 }
 
 section > h1:hover {
   cursor: pointer;
   text-decoration: underline;
+  color: var(--x-dark-green);
 }
 
 .orderList {

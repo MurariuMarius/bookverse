@@ -12,6 +12,7 @@ export default {
 <style>
 .background {
   background-color: var(--x-light-green);
+  z-index: 2;
 }
 
 .spin {

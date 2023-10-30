@@ -2,17 +2,17 @@
   <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType" />
   <div class="book" v-if="book">
     <div class="headSection">
-      <div class="bookDetails">
+      <section class="bookDetails">
         <img :src="imageSource" :alt="book.title" @load="imageLoad">
         <h2>{{ book.title }}</h2>
         <h2>{{ authors }}</h2>
-        <h3>{{ book.ISBN }}</h3>
-      </div>
-      <div class="offers">
+        <h3>ISBN: {{ book.ISBN }}</h3>
+      </section>
+      <section class="offers">
         <h3>Available offers:</h3>
         <OfferPreview v-for="offer in offersSortedByPrice" :offer="offer" @offerSelected="addItemToShoppingCart" />
         <BookConditionsDescription />
-      </div>
+      </section>
     </div>
   </div>
   <div v-if="!pageLoaded">
@@ -103,8 +103,10 @@ export default {
 
 .bookDetails {
   justify-content: center;
+  align-items: center;
   display: flex;
   flex-flow: column;
+  row-gap: 15px;
 }
 
 .offers {
@@ -123,5 +125,9 @@ img {
   margin: auto;
   height: 500px;
   max-width: 90%;
+}
+
+.bookDetails h2, .bookDetails h3 {
+  margin: 0;
 }
 </style>

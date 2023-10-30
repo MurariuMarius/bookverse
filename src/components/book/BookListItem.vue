@@ -1,7 +1,7 @@
 <template>
   <article class="book" @click="viewBook">
     <img :src=imageSource alt="book icon" class="book-icon" @load="imageLoad">
-    <div>
+    <div class="details">
       <h2 class="title">{{ book.title }}</h2>
       <h3 class="author">{{ authors }}</h3>
     </div>
@@ -42,7 +42,7 @@ export default {
     }
 
     const imageLoad = () => {
-      emit('componentLoaded')
+      setTimeout(() => emit('componentLoaded'), 400)
     }
 
     return { authors, imageSource, imageLoad, price, viewBook }
@@ -52,24 +52,34 @@ export default {
 
 <style scoped>
 img {
-  margin: auto;
   height: 300px;
   max-width: 90%;
 }
 
 .book {
-  background-color: #e8e5e5;
-  padding: 20px 35px;
-  border-radius: 20px;
-  justify-content: center;
-  margin: 20px;
   display: flex;
+  padding: 20px 35px;
   flex-direction: column;
+  background-color: #e8e5e5;
+  border-radius: 20px;
+  justify-content: space-between;
+  align-items: center;
   width: 275px;
 }
 
 .book:hover {
   cursor: pointer;
+}
+
+.title, .author {
+  text-align: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .price {
