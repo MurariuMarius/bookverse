@@ -12,6 +12,10 @@ import NotFound from '@/views/NotFound'
 
 import { authService } from '@/firebase/config'
 
+const ADMINS = [
+  'admin@bookverse.com'
+]
+
 const redirectIfAlreadyAuth = (to, from, next) => {
   let currentUser = authService.currentUser
   console.log('User', currentUser)
@@ -26,6 +30,15 @@ const requireAuth = (to, from, next) => {
   let currentUser = authService.currentUser
   if (!currentUser) {
     next({ name: 'login' })
+  } else {
+    next()
+  }
+}
+
+const requireAdminAuth = (to, from, next) => {
+  const currentUser = authService.currentUser
+  if (!currentUser || !ADMINS.includes(currentUser.email)) {
+    next({ path: '/404' })
   } else {
     next()
   }
@@ -77,7 +90,7 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: Admin,
-    // beforeEnter, requireAdminAuth,
+    beforeEnter: requireAdminAuth,
   },
   {
     path: '/:catchAll(.*)',
