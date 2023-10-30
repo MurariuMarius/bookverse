@@ -36,6 +36,7 @@ export default {
     })
 
     const handleSignout = async () => {
+      shoppingCart.empty()
       await signout()
     }
 
