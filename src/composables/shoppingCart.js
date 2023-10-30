@@ -3,6 +3,9 @@ import { reactive } from "vue"
 const shoppingCart = reactive({
   orders: [],
   addOrder(order) {
+    if (this.orders.map(o => o.offer.id).includes(order.offer.id)) {
+      return
+    }
     this.orders.push(order)
   },
   getOrderCount() {
