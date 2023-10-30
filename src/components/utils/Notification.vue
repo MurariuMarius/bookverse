@@ -1,13 +1,22 @@
 <template>
-  <div class="notification" :class="type">
-    <p>{{ message }}</p>
+  <div ref="notification" v-if="message" class="notification" :class="type" >
+    <p >{{ message }}</p>
   </div>
 </template>
 
 <script>
+import { onMounted, ref } from 'vue';
+
 export default {
   props: { message: String, type: String },
   setup(props) {
+    const notification = ref(null)
+
+    onMounted(() => {
+      notification.value.style.setProperty("margin-top", `-${notification.value.clientHeight}px`) 
+    })
+
+    return { notification }
   }
 }
 </script>
@@ -27,7 +36,7 @@ export default {
 }
 
 .success {
-  background-color: var(--dark-green);
+  background-color: #3f9a57;
 }
 
 .error {
