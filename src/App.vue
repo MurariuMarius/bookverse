@@ -1,17 +1,19 @@
 <template>
   <Navbar />
-  <div class="container">
+  <main class="container">
     <router-view/>
-  </div>
+  </main>
+  <Footer />
 </template>
 
 <script>
 import { onMounted } from 'vue'
 import { shoppingCart } from './composables/shoppingCart'
 import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
-  components: { Navbar },
+  components: { Footer, Navbar },
   setup() {
     window.onbeforeunload = () => {
       window.localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart.getOrders()))

@@ -18,9 +18,17 @@ html, body {
 	border: 0;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 100vw;
+}
+
 .container {
   width: 90%;
-  margin: auto;
+  align-self: center;
 }
 
 .background {
