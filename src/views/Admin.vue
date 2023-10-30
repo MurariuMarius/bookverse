@@ -1,43 +1,45 @@
 <template>
-<h1>Admin</h1>
-<Notification v-if="showNotification" :message="notificationMessage" :type="notificationType"/>
-<section class="user">
-  <h2>Reset user email / password</h2>
-  <input type="text" placeholder="User ID" required v-model="userID">
-  <form @submit.prevent="handleResetEmail">
-    <input type="email" placeholder="New email" required v-model="newEmail">
-    <button>Reset email</button>
-  </form>
-  <button @click="handleResetPassword">Reset password</button>
-  <button @click="handleDeleteUser">Delete user</button>
-</section>
-<section class="order">
-  <h2>Manage orders</h2>
-  <input type="text" placeholder="Order ID" required v-model="orderID">
-  <h3>Remove item</h3>
-  <form @submit.prevent="">
-    <input type="text" placeholder="Offer IDs" required v-model="orderItems">
-    <button @click="handleRemoveItems">Remove item</button>
-  </form>
-  <h3>Change delivery details</h3>
-  <form @submit.prevent="handleChangeDeliveryDetails">
-    <input type="text" placeholder="Full name" required v-model="name">
-    <input type="text" placeholder="Phone number" required v-model="phone">
-    <input type="text" placeholder="Address" required v-model="address">
-    <button>Change</button>
-  </form>
-  <button @click="handleDeleteOrder">Remove order</button>
-</section>
-<section class="offer">
-  <h2>Manage offers</h2>
-  <form @submit.prevent="handleUpdateOffer">
-    <input type="text" placeholder="Offer ID" required v-model="offerID">
-    <input type="text" placeholder="Price" required v-model="offerPrice">
-    <input type="text" placeholder="Book condition" required v-model="bookCondition">
-    <button>Edit offer</button>
-  </form>
-  <button @click="handleDeleteOffer">Delete offer</button>
-</section>
+  <div class="admin">
+    <h1>Admin</h1>
+    <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType"/>
+    <section class="user">
+      <h2>Reset user email / password</h2>
+      <input type="text" placeholder="User ID" required v-model="userID">
+      <form @submit.prevent="handleResetEmail">
+        <input type="email" placeholder="New email" required v-model="newEmail">
+        <button>Reset email</button>
+      </form>
+      <button @click="handleResetPassword">Reset password</button>
+      <button @click="handleDeleteUser">Delete user</button>
+    </section>
+    <section class="order">
+      <h2>Manage orders</h2>
+      <input type="text" placeholder="Order ID" required v-model="orderID">
+      <h3>Remove item</h3>
+      <form @submit.prevent="">
+        <input type="text" placeholder="Offer IDs" required v-model="orderItems">
+        <button @click="handleRemoveItems">Remove item</button>
+      </form>
+      <h3>Change delivery details</h3>
+      <form @submit.prevent="handleChangeDeliveryDetails">
+        <input type="text" placeholder="Full name" required v-model="name">
+        <input type="text" placeholder="Phone number" required v-model="phone">
+        <input type="text" placeholder="Address" required v-model="address">
+        <button>Change</button>
+      </form>
+      <button @click="handleDeleteOrder">Remove order</button>
+    </section>
+    <section class="offer">
+      <h2>Manage offers</h2>
+      <form @submit.prevent="handleUpdateOffer">
+        <input type="text" placeholder="Offer ID" required v-model="offerID">
+        <input type="text" placeholder="Price" required v-model="offerPrice">
+        <input type="text" placeholder="Book condition" required v-model="bookCondition">
+        <button>Edit offer</button>
+      </form>
+      <button @click="handleDeleteOffer">Delete offer</button>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -159,8 +161,25 @@ export default {
 </script>
 
 <style scoped>
+.admin {
+  width: 100%;
+  align-items: flex-start;
+}
+
+h1 {
+  text-align: left;
+}
+
 section {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border-top: solid;
   margin-top: 25px;
+}
+
+button {
+  margin-bottom: 20px;
 }
 </style>
