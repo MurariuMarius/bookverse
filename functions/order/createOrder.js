@@ -35,6 +35,10 @@ exports.createOrder = onCall(async (request) => {
       })
     })
 
+    if (!items.length) {
+      throw new HttpsError('invalid-argument', 'Order doesn\'t contain any items')
+    }
+
     return {
       buyerID: getUserID(),
       name: request.data.name,

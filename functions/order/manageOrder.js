@@ -3,7 +3,7 @@ const { firestoreService, authorizeOperation } = require('../admin')
 const { getDocByID } = require('../getDocByID')
 const { Timestamp } = require('firebase-admin/firestore')
 
-const secondsAfterPlacementAllowingOrderModifications = 60
+const secondsAfterPlacementAllowingOrderModifications = 300
 
 const getOwnerID = (order) => {
   const now = Timestamp.now()

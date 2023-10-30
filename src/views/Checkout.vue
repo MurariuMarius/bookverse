@@ -74,6 +74,10 @@ export default {
       if (!deliveryDetails || !deliveryDetails.name || !deliveryDetails.address || deliveryDetails.phoneError) {
         return
       }
+
+      if (!orders.value.length) {
+        return
+      }
       
       if (!agreedTermsOfService.value) {
         agreedTermsOfServiceError.value = 'You must agree to the terms of service'
