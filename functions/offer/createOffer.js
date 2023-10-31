@@ -9,33 +9,76 @@ const { firestoreService, storageBucket } = require('../admin')
 const bookConditions = ['New', 'As New', 'Good', 'Fair', 'Poor']
 
 exports.createOffer = onCall(async (request) => {
-  const getBookDetails = async (ISBN) => {
-    const bookFound = () => {
-      return books.totalItems != 0 && (
-        books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
-        books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN)
+
+  const parseBookData = async (request) => {
+
+    const getBookDetails = async (book) => {
+      const bookFound = () => {
+        return books.totalItems != 0 && (
+          books.items[0].volumeInfo.industryIdentifiers[0].identifier === book.ISBN ||
+          books.items[0].volumeInfo.industryIdentifiers[1].identifier === book.ISBN)
+      }
+  
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.ISBN}`)
+      const books = await response.json();
+  
+      if (!bookFound()) {
+        return book
+      }
+  
+      const bookData = books.items[0].volumeInfo
+  
+      if (bookData.title) {
+        book.title = bookData.title
+      }
+
+      if (bookData.authors) {
+        book.authors = bookData.authors
+      }
+  
+      try {
+        book.imageURL = bookData.imageLinks.thumbnail
+      } catch (err) {
+        logger.log(`Could not find image for ${book.ISBN}`)
+      }
+  
+      return book
+    }
+  
+    const addImageURLIfPresent = async (book) => {
+      if (!book.imageURL) {
+        return book
+      }
+  
+      const getFileFromURL = async (URL) => {
+        let response = await fetch(URL)
+        let data = await response.blob()
+        let file = data.arrayBuffer()
+        return file
+      }
+  
+      const fileRef = storageBucket.file(`books/${book.ISBN}`)
+      const file = await getFileFromURL(book.imageURL)
+      await fileRef.save(new Uint8Array(file))
+  
+      const downloadURL = await getDownloadURL(fileRef)
+  
+      book.imageURL = downloadURL
+  
+      return book
     }
 
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN}`)
-    const books = await response.json();
-
-    if (!bookFound()) {
-      throw new Error('ISBN not found')
+    let book = {
+      ISBN: request.data.ISBN.trim(),
+      title: request.data.title.trim(),
+      authors: request.data.authors.split(', '),
+      imageURL: null
     }
+    
+    book = await getBookDetails(book)
+    book = await addImageURLIfPresent(book)
 
-    const book = books.items[0].volumeInfo
-
-    const authors = book.authors
-    const title = book.title
-
-    let imageURL = null
-    try {
-      imageURL = book.imageLinks.thumbnail
-    } catch (err) {
-      logger.log(`Could not find image for ${ISBN}`)
-    }
-
-    return { title, authors, imageURL }
+    return book
   }
 
   const validateBookRequest = () => {
@@ -58,6 +101,10 @@ exports.createOffer = onCall(async (request) => {
     if (!validPrice(request.data.price.trim())) {
       throw new HttpsError('invalid-argument', 'Invalid price')
     }
+
+    if (!request.data.title || !request.data.authors) {
+      throw new HttpsError('invalid-argument', 'All fields are mandatory')
+    }
   }
 
   const storeBookIfNotInDB = async (book) => {
@@ -79,34 +126,9 @@ exports.createOffer = onCall(async (request) => {
     }
   }
 
-  const addImageURLIfPresent = async (book) => {
-    if (!book.imageURL) {
-      return book
-    }
-
-    const getFileFromURL = async (URL) => {
-      let response = await fetch(URL)
-      let data = await response.blob()
-      let file = data.arrayBuffer()
-      return file
-    }
-
-    const fileRef = storageBucket.file(`books/${book.ISBN}`)
-    const file = await getFileFromURL(book.imageURL)
-    await fileRef.save(new Uint8Array(file))
-
-    const downloadURL = await getDownloadURL(fileRef)
-
-    book.imageURL = downloadURL
-
-    return book
-  }
-
   validateBookRequest()
 
-  let book = {
-    ISBN: request.data.ISBN.trim(),
-  }
+  const book = await parseBookData(request)
 
   const bookOffer = {
     sellerID: getUserID(),
@@ -115,22 +137,6 @@ exports.createOffer = onCall(async (request) => {
     price: parseFloat(request.data.price.replace(',', '.')),
     createdAt: Timestamp.now(),
     status: 'available'
-  }
-
-  try {
-    const verifiedBookData = await getBookDetails(book.ISBN)
-    book = { ...verifiedBookData, ...book }
-  } catch (err) {
-    const title = request.data.title.trim()
-    const authors = request.data.authors.split(', ')
-
-    book = { title: title, authors: authors, ...book }
-  }
-
-  try {
-    book = await addImageURLIfPresent(book)
-  } catch (err) {
-    logger.log(err.message)
   }
 
   try {

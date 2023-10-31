@@ -1,9 +1,9 @@
 <template>
   <h2>Create a book offer</h2>
   <form @submit.prevent="">
+    <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
     <input type="text" required placeholder="Title" v-model="title">
     <input type="text" required placeholder="Authors" v-model="authors">
-    <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
     <input type="text" required placeholder="Price in EUR" v-model="price" @blur="checkPrice">
     <pre v-if="ISBN_error" class="error">{{ ISBN_error }}</pre>
     <pre v-if="priceError" class="error">{{ priceError }}</pre>
@@ -17,9 +17,11 @@
 
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import BookConditionsDescription from '@/components/book/BookConditionsDescription.vue'
+import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
 
 export default {
   components: { BookConditionsDescription },
@@ -36,6 +38,8 @@ export default {
 
     const functions = getFunctions()
 
+    const router = useRouter()
+
     const checkISBN = async () => {
       ISBN.value = ISBN.value.trim()
       ISBN_error.value = ''
@@ -49,11 +53,18 @@ export default {
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN.value}`)
       const books = await response.json()
 
-      if (books.totalItems != 0 && (
-          books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
-          books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN
+      if (books.totalItems == 0 || (
+          books.items[0].volumeInfo.industryIdentifiers[0].identifier !== ISBN.value &&
+          books.items[0].volumeInfo.industryIdentifiers[1].identifier !== ISBN.value
       )) {
         ISBN_error.value = 'ISBN may be invalid. Please check again.\nDisregard warning if book is newly published or rare.'
+      } else {
+        try {
+          title.value = books.items[0].volumeInfo.title
+          authors.value = books.items[0].volumeInfo.authors.join(', ')
+        } catch (err) {
+          console.log('Book data incomplete')
+        }
       }
     }
 
@@ -68,16 +79,21 @@ export default {
       }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       const createOffer = httpsCallable(functions, 'createOffer')
       console.log(selectedOption.value)
-      createOffer({ title: title.value, authors: authors.value, ISBN: ISBN.value, condition: selectedOption.value, price: price.value })
-        .then(result => {
-          console.log(result)
+      try {
+        await createOffer({
+          title: title.value,
+          authors: authors.value,
+          ISBN: ISBN.value,
+          condition: selectedOption.value,
+          price: price.value
         })
-        .catch(err => {
-          console.log(err.message)
-        })
+        redirectToPageWithMessage(router, 'profile', 'Offer successfully created.', 'success')
+      } catch (err) {
+        redirectToPageWithMessage(router, 'profile', err.message, 'error')
+      }
     };
 
     return { authors, title, ISBN, ISBN_error, price, priceError, bookConditions, selectedOption, checkISBN, checkPrice, handleSubmit, selectOption };
