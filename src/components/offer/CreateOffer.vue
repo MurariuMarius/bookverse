@@ -1,9 +1,9 @@
 <template>
   <h2>Create a book offer</h2>
   <form @submit.prevent="">
+    <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
     <input type="text" required placeholder="Title" v-model="title">
     <input type="text" required placeholder="Authors" v-model="authors">
-    <input type="text" required placeholder="ISBN" v-model="ISBN" @blur="checkISBN">
     <input type="text" required placeholder="Price in EUR" v-model="price" @blur="checkPrice">
     <pre v-if="ISBN_error" class="error">{{ ISBN_error }}</pre>
     <pre v-if="priceError" class="error">{{ priceError }}</pre>
@@ -54,6 +54,13 @@ export default {
           books.items[0].volumeInfo.industryIdentifiers[1].identifier !== ISBN.value
       )) {
         ISBN_error.value = 'ISBN may be invalid. Please check again.\nDisregard warning if book is newly published or rare.'
+      } else {
+        try {
+          title.value = books.items[0].volumeInfo.title
+          authors.value = books.items[0].volumeInfo.authors.join(', ')
+        } catch (err) {
+          console.log('Book data incomplete')
+        }
       }
     }
 
