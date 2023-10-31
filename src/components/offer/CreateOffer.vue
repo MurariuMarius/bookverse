@@ -49,9 +49,9 @@ export default {
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${ISBN.value}`)
       const books = await response.json()
 
-      if (books.totalItems != 0 && (
-          books.items[0].volumeInfo.industryIdentifiers[0].identifier === ISBN ||
-          books.items[0].volumeInfo.industryIdentifiers[1].identifier === ISBN
+      if (books.totalItems == 0 || (
+          books.items[0].volumeInfo.industryIdentifiers[0].identifier !== ISBN.value &&
+          books.items[0].volumeInfo.industryIdentifiers[1].identifier !== ISBN.value
       )) {
         ISBN_error.value = 'ISBN may be invalid. Please check again.\nDisregard warning if book is newly published or rare.'
       }
