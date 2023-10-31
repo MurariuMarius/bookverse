@@ -17,9 +17,11 @@
 
 <script>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 import BookConditionsDescription from '@/components/book/BookConditionsDescription.vue'
+import redirectToPageWithMessage from '@/composables/utils/redirectToPageWithMessage'
 
 export default {
   components: { BookConditionsDescription },
@@ -35,6 +37,8 @@ export default {
     const priceError = ref('')
 
     const functions = getFunctions()
+
+    const router = useRouter()
 
     const checkISBN = async () => {
       ISBN.value = ISBN.value.trim()
@@ -75,16 +79,21 @@ export default {
       }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       const createOffer = httpsCallable(functions, 'createOffer')
       console.log(selectedOption.value)
-      createOffer({ title: title.value, authors: authors.value, ISBN: ISBN.value, condition: selectedOption.value, price: price.value })
-        .then(result => {
-          console.log(result)
+      try {
+        await createOffer({
+          title: title.value,
+          authors: authors.value,
+          ISBN: ISBN.value,
+          condition: selectedOption.value,
+          price: price.value
         })
-        .catch(err => {
-          console.log(err.message)
-        })
+        redirectToPageWithMessage(router, 'profile', 'Offer successfully created.', 'success')
+      } catch (err) {
+        redirectToPageWithMessage(router, 'profile', err.message, 'error')
+      }
     };
 
     return { authors, title, ISBN, ISBN_error, price, priceError, bookConditions, selectedOption, checkISBN, checkPrice, handleSubmit, selectOption };
