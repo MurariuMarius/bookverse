@@ -59,6 +59,7 @@ export default {
         })
         if (!error.value) {
           router.push({ name: 'home' })
+          router.go()
         }
       }
     }

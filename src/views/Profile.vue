@@ -1,5 +1,5 @@
 <template>
-  <Spinner v-if="(!offerError && !offers.size) || (!orderError && !orders.size) || (orders.size && !ordersLoaded)" />
+  <Spinner v-if="(!offerError && !offers.size) || (!orderError && !orders.size) || (!orderError && !ordersLoaded)" />
   <NotificationAfterRedirection v-else :route="route" :window="getWindow()" />
   <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType" />
   <section class="welcome">
