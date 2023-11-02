@@ -1,5 +1,5 @@
 <template>
-  <p v-if="!offers.size">You haven't made any offers yet.</p>
+  <p v-if="!offers.size">There are no offers made.</p>
   <p v-else>Sold items will be marked green.</p>
   <div v-if="offers">
     <Offer v-for="[offer, book] in offers" :offer="offer" :book="book" />

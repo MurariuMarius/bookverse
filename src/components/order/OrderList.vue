@@ -3,7 +3,7 @@
     <Order v-for="[order, orderItems] in orders" :key="order" :order="order" :orderItems="orderItems"
       @loaded="pageLoaded" />
   </div>
-  <p v-else>{{ uid }} has placed no orders.</p>
+  <p v-else>There are no orders placed.</p>
 </template>
 
 <script>

@@ -3,7 +3,7 @@
     <h1>Admin</h1>
     <NotificationAfterRedirection :route="route" :window="getWindow()"/>
     <Notification v-if="showNotification" :message="notificationMessage" :type="notificationType"/>
-    <section class="user">
+    <section class="users">
       <User v-for="user in users" :key="user.uid" :user="user" />
     </section>
   </div>
@@ -44,12 +44,11 @@ export default {
 
 <style scoped>
 .admin {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  align-items: flex-start;
-}
-
-h1 {
-  text-align: left;
+  justify-content: center;
+  align-items: center;
 }
 
 section {
@@ -63,5 +62,11 @@ section {
 
 button {
   margin-bottom: 20px;
+}
+
+.users {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
 }
 </style>

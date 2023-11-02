@@ -10,8 +10,10 @@
         <input type="email" placeholder="New email" required v-model="newEmail">
         <button>Reset email</button>
       </form>
-      <button @click="handleResetPassword">Reset password</button>
-      <button @click="handleDeleteUser">Delete user</button>
+      <div>
+        <button @click="handleResetPassword">Reset password</button>
+        <button @click="handleDeleteUser">Delete user</button>
+      </div>
     </section>
     <section class="orders">
       <OrderList :uid="user.uid" />
@@ -79,7 +81,19 @@ export default {
 
 <style scoped>
 .user {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
   background-color: #f5f5f5;
   border-radius: 25px;
+  width: 100%;
+}
+
+.credentials div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
 }
 </style>
