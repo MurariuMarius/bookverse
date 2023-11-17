@@ -50,7 +50,7 @@ export default {
     const handleSubmit = async () => {
       if (verifyMatchingPasswords()) {
         const res = await signup(email.value, password.value, username.value)
-        firestoreService.collection('users')
+        await firestoreService.collection('users')
           .doc(res.user.uid)
           .set({
             username: username.value,
