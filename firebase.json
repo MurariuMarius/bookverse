@@ -18,6 +18,7 @@
     }
   ],
   "hosting": {
+    "site": "bookverse",
     "public": "build",
     "ignore": [
       "firebase.json",

@@ -3,12 +3,12 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/auth'
 
 const firebaseConfig = {
-	apiKey: "AIzaSyAOhB8wcK_uKI5ss1NcgSLOJrRK-fN4NVk",
-	authDomain: "bookverse-5dc0c.firebaseapp.com",
-	projectId: "bookverse-5dc0c",
-	storageBucket: "bookverse-5dc0c.appspot.com",
-	messagingSenderId: "894384771469",
-	appId: "1:894384771469:web:ee6af03568bdd71d65adc4"
+	apiKey: `${process.env.VUE_APP_API_KEY}`,
+	authDomain: `${process.env.VUE_APP_AUTH_DOMAIN}`,
+	projectId: `${process.env.VUE_APP_PROJECT_ID}`,
+	storageBucket: `${process.env.VUE_APP_STORAGE_BUCKET}`,
+	messagingSenderId: `${process.env.VUE_APP_MESSAGING_SENDER_ID }`,
+	appId: `${process.env.VUE_APP_ID}`
 };
 
 firebase.initializeApp(firebaseConfig)
